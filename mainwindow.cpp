@@ -2,12 +2,13 @@
 #include "ui_mainwindow.h"
 
 #include <QTimer>
-
+MainWindow *MainWindow::MW;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    MW=this;
     init();
 }
 void MainWindow::init()
@@ -301,4 +302,17 @@ void MainWindow::on_pass_clean_clicked()
 void MainWindow::on_set_rpc_IP_returnPressed()
 {
     on_connect_rpc_clicked();
+}
+
+rpc_pose_t MainWindow::getMy_target() const
+{
+    return my_target;
+}
+
+void MainWindow::setMy_target(const rpc_pose_t &value)
+{
+    my_target = value;
+    ui->set_target_x->setText(QString("%1").arg(my_target.x));
+    ui->set_target_y->setText(QString("%1").arg(my_target.y));
+
 }

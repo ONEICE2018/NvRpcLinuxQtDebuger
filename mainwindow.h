@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sstream>
 #include <iostream>
+
 #define MY_PI 3.141592
 struct pid_kpid_t
 {
@@ -34,6 +35,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    static MainWindow *MW;
+    rpc_pose_t getMy_target() const;
+    void setMy_target(const rpc_pose_t &value);
 
 private slots:
     void see_pose();
@@ -78,4 +82,5 @@ private:
     void showMsgs(QString msg);
     void init();
 };
+
 #endif // MAINWINDOW_H
