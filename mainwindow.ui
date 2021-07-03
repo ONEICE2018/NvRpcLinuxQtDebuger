@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>829</width>
-    <height>600</height>
+    <width>873</width>
+    <height>681</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -48,8 +48,8 @@ w:0</string>
      <rect>
       <x>480</x>
       <y>50</y>
-      <width>241</width>
-      <height>171</height>
+      <width>311</width>
+      <height>101</height>
      </rect>
     </property>
    </widget>
@@ -258,8 +258,8 @@ w:0</string>
    <widget class="QPushButton" name="global_clean">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>210</y>
+      <x>300</x>
+      <y>220</y>
       <width>91</width>
       <height>51</height>
      </rect>
@@ -271,8 +271,8 @@ w:0</string>
    <widget class="QPushButton" name="pass_clean">
     <property name="geometry">
      <rect>
-      <x>290</x>
-      <y>270</y>
+      <x>300</x>
+      <y>280</y>
       <width>91</width>
       <height>51</height>
      </rect>
@@ -329,42 +329,106 @@ w:0</string>
      </item>
     </layout>
    </widget>
-   <widget class="CoordinateMap" name="widget" native="true">
+   <widget class="CoordinateMap" name="widget_map" native="true">
     <property name="geometry">
      <rect>
       <x>440</x>
       <y>230</y>
-      <width>371</width>
-      <height>301</height>
+      <width>400</width>
+      <height>400</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QDial" name="show_now_angle">
-    <property name="enabled">
-     <bool>true</bool>
+    <property name="minimumSize">
+     <size>
+      <width>400</width>
+      <height>400</height>
+     </size>
     </property>
+    <property name="maximumSize">
+     <size>
+      <width>400</width>
+      <height>400</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>190</y>
+      <width>301</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_9">
+     <item>
+      <widget class="QLineEdit" name="set_map_x_range"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="show_map_x_range">
+       <property name="text">
+        <string>range_x:4000mm</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>410</y>
+      <width>191</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_10">
+     <item>
+      <widget class="QLabel" name="text_pid_v">
+       <property name="text">
+        <string>pid_v:0</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="set_pid_v"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget_2">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>160</y>
+      <width>271</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_11">
+     <item>
+      <widget class="QLabel" name="text_allow_erro">
+       <property name="text">
+        <string>近点允许误差0mm</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="set_allow_erro"/>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="clean_history">
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>370</y>
-      <width>101</width>
-      <height>81</height>
+      <y>380</y>
+      <width>89</width>
+      <height>25</height>
      </rect>
     </property>
-    <property name="maximum">
-     <number>360</number>
-    </property>
-    <property name="value">
-     <number>90</number>
-    </property>
-    <property name="wrapping">
-     <bool>true</bool>
-    </property>
-    <property name="notchTarget">
-     <double>30.000000000000000</double>
-    </property>
-    <property name="notchesVisible">
-     <bool>false</bool>
+    <property name="text">
+     <string>清除轨迹点
+</string>
     </property>
    </widget>
   </widget>
@@ -373,7 +437,7 @@ w:0</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>829</width>
+     <width>873</width>
      <height>28</height>
     </rect>
    </property>

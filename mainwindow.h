@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <sstream>
 #include <iostream>
-
+#include <QKeyEvent>
 #define MY_PI 3.141592
 struct pid_kpid_t
 {
@@ -39,9 +39,18 @@ public:
     rpc_pose_t getMy_target() const;
     void setMy_target(const rpc_pose_t &value);
 
+    rpc_pose_t getMy_nowpose() const;
+    void setMy_nowpose(const rpc_pose_t &value);
+
+    int getPid_allow_erro() const;
+    void setPid_allow_erro(int value);
+    void showMsgs(QString msg);
+protected:
+    void keyPressEvent(QKeyEvent *event);
+
 private slots:
     void see_pose();
-
+    void map_Range_xy_cahnged();
     void on_connect_rpc_clicked();
 
     void on_enble_kp_clicked();
@@ -72,15 +81,26 @@ private slots:
 
     void on_set_rpc_IP_returnPressed();
 
+    void on_set_map_x_range_returnPressed();
+
+    void on_set_pid_v_returnPressed();
+
+    void on_set_allow_erro_returnPressed();
+
+    void on_clean_history_clicked();
+
 private:
     Ui::MainWindow *ui;
     rpc::client* c_reply = nullptr;
     rpc_pose_t my_target;
     rpc_pose_t my_nowpose;
     pid_kpid_t my_kpid;
+    float pid_set_v;
     int my_pid_mode=0x01; //bit 1 enable kp,bit 2 enable ki, bit 3 enable kd
-    void showMsgs(QString msg);
+    int pid_allow_erro;
+
     void init();
+
 };
 
 #endif // MAINWINDOW_H
