@@ -1,6 +1,9 @@
 #include "coordinatemap.h"
 #include "ui_coordinatemap.h"
 
+#include <QTimer>
+#define BOT_L 350  //mm
+#define MAX_MOVESPED 10
 
 CoordinateMap::CoordinateMap(QWidget *parent) :
     QWidget(parent),
@@ -12,6 +15,10 @@ CoordinateMap::CoordinateMap(QWidget *parent) :
     cursor.setShape(Qt::CrossCursor);    // 设置光标形状
     setCursor(cursor);                   // 使用光标
     hisory_xys=*new QList<rpc_pose_t>;
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(timer_mover()));
+    timer->start(66);
 }
 
 CoordinateMap::~CoordinateMap()
@@ -48,6 +55,32 @@ void CoordinateMap::mouseMoveEvent(QMouseEvent *event)
 
        update();
    }
+   if(left_click_to_move)
+   {
+       int x=event->x();
+       int y=event->y();
+       int height=this->height();
+       int width=this->width();
+       if(x<0)
+       {
+           x=0;
+       }
+       if(x>width)
+       {
+           x=width;
+       }
+       if(y<0)
+       {
+           y=0;
+       }
+       if(y>height)
+       {
+           y=height;
+       }
+       move_p_x = ((x-width/2.0)/(width/2.0))*MAX_MOVESPED;
+       move_p_y = 0-((y-height/2.0)/(height/2.0))*MAX_MOVESPED;
+       update();
+   }
 }
 
 bool CoordinateMap::eventFilter(QObject *target, QEvent *event)
@@ -74,16 +107,33 @@ void CoordinateMap::mousePressEvent(QMouseEvent *event)
           update();
     }
     if(event->button() == Qt::LeftButton)
-      {
-            view_need_move=true;
+     {
+          left_click_to_move=true;
 
-             update();
-      }
+          int x=event->x();
+          int y=event->y();
+          int height=this->height();
+          int width=this->width();
+          if(x<0){x=0;}
+          if(x>width){x=width;}
+          if(y<0){y=0;}
+          if(y>height){y=height;}
+          move_p_x = ((x-width/2.0)/(width/2.0))*MAX_MOVESPED;
+          move_p_y = (0-((y-height/2.0)/(height/2.0)))*MAX_MOVESPED;
+          update();
+     }
 }
 
 void CoordinateMap::mouseReleaseEvent(QMouseEvent *event)
 {
-    mouse_pressed=false;
+    if(event->button() == Qt::RightButton)
+    {
+        mouse_pressed=false;
+    }
+    if(event->button() == Qt::LeftButton)
+    {
+         left_click_to_move=false;
+    }
 }
 
 void CoordinateMap::wheelEvent(QWheelEvent *event)
@@ -108,6 +158,16 @@ void CoordinateMap::wheelEvent(QWheelEvent *event)
     lastvalue=Range_xy;
 }
 
+void CoordinateMap::move_view()
+{
+    if(!org_is_bot&&left_click_to_move)
+    {
+
+        refrence_pose.x=MainWindow::MW->getMy_nowpose().x;
+        refrence_pose.y=MainWindow::MW->getMy_nowpose().y;
+    }
+
+}
 
 
 void CoordinateMap::refrash_ui()
@@ -115,15 +175,15 @@ void CoordinateMap::refrash_ui()
       int line_x0,line_x1,line_y0,line_y1;
       QPainter painter(this);
 
+
+      float Pxy=(Range_xy*1.0)/this->width()  ;
+      int shift_x=this->width()/2.0*Pxy ;
+      int shift_y=this->height()/2.0*Pxy;
       if(org_is_bot){
           refrence_pose.x=MainWindow::MW->getMy_nowpose().x;
           refrence_pose.y=MainWindow::MW->getMy_nowpose().y;
           refrence_pose.theta=MainWindow::MW->getMy_nowpose().theta;
       }
-
-      float Pxy=(Range_xy*1.0)/this->width()  ;
-      int shift_x=this->width()/2.0*Pxy ;
-      int shift_y=this->height()/2.0*Pxy;
       //drawo bot
       line_x0=getdraw_one_x(MainWindow::MW->getMy_nowpose().x);
       line_y0=getdraw_one_y(MainWindow::MW->getMy_nowpose().y);
@@ -193,7 +253,7 @@ void CoordinateMap::refrash_ui()
 
       line_x1=getdraw_one_x(cx1);
       line_y1=getdraw_one_y(cy1);
-           painter.drawLine(line_x0,line_y0,line_x1,line_y1);
+      painter.drawLine(line_x0,line_y0,line_x1,line_y1);
       line_x1=getdraw_one_x(cx2);
       line_y1=getdraw_one_y(cy2);
       painter.drawLine(line_x0,line_y0,line_x1,line_y1);
@@ -235,32 +295,32 @@ void CoordinateMap::draw_texts()
     //使用字体
     painter.setFont(font);
     //draw machin (x,y)
-    line_x0=getdraw_one_x(MainWindow::MW->getMy_nowpose().x);
-    line_y0=getdraw_one_y(MainWindow::MW->getMy_nowpose().y);
+    line_x0=getdraw_one_x(refrence_pose.x);
+    line_y0=getdraw_one_y(refrence_pose.y);
     painter.drawText(line_x0+BOT_L/2.0/Pxy,line_y0-10-TEXT_PY_Y,
-                     QString("%1,%2,%3").arg(MainWindow::MW->getMy_nowpose().x)
-                     .arg(MainWindow::MW->getMy_nowpose().y)
-                     .arg(MainWindow::MW->getMy_nowpose().theta));
+                     QString("%1,%2,%3").arg(refrence_pose.x)
+                     .arg(refrence_pose.y)
+                     .arg(refrence_pose.theta));
 
     //show min_y
-    line_x0=getdraw_one_x(MainWindow::MW->getMy_nowpose().x);
-    line_y0=getdraw_one_y(MainWindow::MW->getMy_nowpose().y-shift_y);
+    line_x0=getdraw_one_x(refrence_pose.x);
+    line_y0=getdraw_one_y(refrence_pose.y-shift_y);
     painter.drawText(line_x0,line_y0-TEXT_PY_Y,
                      QString("y_min(%1)").arg(getreal_y(this->height())));
     //show max y
-    line_x0=getdraw_one_x(MainWindow::MW->getMy_nowpose().x);
-    line_y0=getdraw_one_y(MainWindow::MW->getMy_nowpose().y+shift_y);
+    line_x0=getdraw_one_x(refrence_pose.x);
+    line_y0=getdraw_one_y(refrence_pose.y+shift_y);
     painter.drawText(line_x0,line_y0+FONT_H+TEXT_PY_Y,
                      QString("y_max(%1)").arg(getreal_y(0)));
 
     //show min_x
-    line_x0=getdraw_one_x(MainWindow::MW->getMy_nowpose().x-shift_x);
-    line_y0=getdraw_one_y(MainWindow::MW->getMy_nowpose().y);
+    line_x0=getdraw_one_x(refrence_pose.x-shift_x);
+    line_y0=getdraw_one_y(refrence_pose.y);
     painter.drawText(line_x0,line_y0-TEXT_PY_Y,
                      QString("x_min(%1)").arg(getreal_x(0)));
     //show max x
-    line_x0=getdraw_one_x(MainWindow::MW->getMy_nowpose().x+shift_x);
-    line_y0=getdraw_one_y(MainWindow::MW->getMy_nowpose().y);
+    line_x0=getdraw_one_x(refrence_pose.x+shift_x);
+    line_y0=getdraw_one_y(refrence_pose.y);
     painter.drawText(line_x0-FONT_W,line_y0-TEXT_PY_Y,
                      QString("x_max(%1)").arg(getreal_x(this->width())));
 
@@ -270,10 +330,10 @@ void CoordinateMap::draw_texts()
     line_x0=getdraw_one_x(MainWindow::MW->getMy_target().x);
     line_y0=getdraw_one_y(MainWindow::MW->getMy_target().y);
     float distance=abs(sqrt(
-                           (MainWindow::MW->getMy_target().x-MainWindow::MW->getMy_nowpose().x)
-                           *(MainWindow::MW->getMy_target().x-MainWindow::MW->getMy_nowpose().x)
-                          +(MainWindow::MW->getMy_target().y-MainWindow::MW->getMy_nowpose().y)
-                           *(MainWindow::MW->getMy_target().y-MainWindow::MW->getMy_nowpose().y)
+                           (MainWindow::MW->getMy_target().x-refrence_pose.x)
+                           *(MainWindow::MW->getMy_target().x-refrence_pose.x)
+                          +(MainWindow::MW->getMy_target().y-refrence_pose.y)
+                           *(MainWindow::MW->getMy_target().y-refrence_pose.y)
                           ));
     painter.drawText(line_x0-FONT_W,line_y0-TEXT_PY_Y,
                      QString("D:%1mm").arg(distance));
@@ -285,6 +345,28 @@ void CoordinateMap::setOrg_is_bot(bool value)
 {
     org_is_bot =!org_is_bot;
     MainWindow::MW->showMsgs(QString("view locked %1").arg(org_is_bot));
+    update();
+}
+
+void CoordinateMap::set_Org_back_bot()
+{
+    if(!org_is_bot){
+        refrence_pose.x=MainWindow::MW->getMy_nowpose().x;
+        refrence_pose.y=MainWindow::MW->getMy_nowpose().y;
+        refrence_pose.theta=MainWindow::MW->getMy_nowpose().theta;
+        update();
+    }
+}
+
+void CoordinateMap::timer_mover()
+{
+    //set referce point
+    if(!org_is_bot && left_click_to_move){
+        float Pxy=(Range_xy*1.0)/this->width()  ;
+        refrence_pose.x+=move_p_x*Pxy;
+        refrence_pose.y+=move_p_y*Pxy;
+        update();
+    }
 }
 
 void CoordinateMap::setRefrence_pose(const rpc_pose_t &value)

@@ -52,6 +52,11 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     {
          case Qt::Key_Y:
              ui->widget_map->setOrg_is_bot(true);
+             fputc(' ',stdin);
+         break;
+         case Qt::Key_B:
+             ui->widget_map->set_Org_back_bot();\
+             showMsgs("space");
          break;
    }
 

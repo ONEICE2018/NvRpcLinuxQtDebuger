@@ -29,10 +29,14 @@ public:
     void setRefrence_pose(const rpc_pose_t &value);
 
     void setOrg_is_bot(bool value);
+    void set_Org_back_bot(void);
 
 signals:
     void my_Range_xy_canged();
     void tagrget_changed();
+
+private slots:
+    void timer_mover();
 protected:
     void mouseMoveEvent(QMouseEvent* event);
     bool eventFilter(QObject *target, QEvent *event);
@@ -49,18 +53,20 @@ private:
     int getdraw_one_y(int y);
     int getreal_x(int drawx);
     int getreal_y(int drawy);
+    void move_view(void);
     bool draw_target{false};
     int  Range_xy=4000;
     void draw_texts();
     bool mouse_pressed{false};
-    #define BOT_L 350  //mm
-    QMutex mutex_hittory_xys;
-    QList<rpc_pose_t> hisory_xys;// you ge keng s
+    bool left_click_to_move{false};
 
+    QMutex mutex_hittory_xys;
+    QList<rpc_pose_t> hisory_xys;// you ge keng
     bool org_is_bot{true};
     rpc_pose_t refrence_pose;
 
-    bool view_need_move{false};
+    int move_p_x{1};
+    int move_p_y{1};
 
 };
 
