@@ -75,10 +75,10 @@
     <bool>true</bool>
    </property>
    <property name="notchTarget">
-    <double>0.000000000000000</double>
+    <double>15.000000000000000</double>
    </property>
    <property name="notchesVisible">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
   </widget>
  </widget>

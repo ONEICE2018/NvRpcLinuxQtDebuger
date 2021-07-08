@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>873</width>
-    <height>681</height>
+    <height>824</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -103,13 +103,6 @@ w:0</string>
          <item>
           <widget class="QLineEdit" name="set_kp"/>
          </item>
-         <item>
-          <widget class="QPushButton" name="enble_kp">
-           <property name="text">
-            <string>enable_kp</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
        <item>
@@ -124,13 +117,6 @@ w:0</string>
          <item>
           <widget class="QLineEdit" name="set_ki"/>
          </item>
-         <item>
-          <widget class="QPushButton" name="enbale_ki">
-           <property name="text">
-            <string>enable_ki</string>
-           </property>
-          </widget>
-         </item>
         </layout>
        </item>
        <item>
@@ -144,13 +130,6 @@ w:0</string>
          </item>
          <item>
           <widget class="QLineEdit" name="set_kd"/>
-         </item>
-         <item>
-          <widget class="QPushButton" name="enable_kd">
-           <property name="text">
-            <string>enable_kd</string>
-           </property>
-          </widget>
          </item>
         </layout>
        </item>
@@ -395,28 +374,6 @@ w:0</string>
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="layoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>450</x>
-      <y>160</y>
-      <width>271</width>
-      <height>27</height>
-     </rect>
-    </property>
-    <layout class="QHBoxLayout" name="horizontalLayout_11">
-     <item>
-      <widget class="QLabel" name="text_allow_erro">
-       <property name="text">
-        <string>近点允许误差0mm</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="set_allow_erro"/>
-     </item>
-    </layout>
-   </widget>
    <widget class="QPushButton" name="clean_history">
     <property name="geometry">
      <rect>
@@ -429,6 +386,196 @@ w:0</string>
     <property name="text">
      <string>清除轨迹点
 </string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>450</y>
+      <width>307</width>
+      <height>194</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_5">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_11">
+       <item>
+        <widget class="QLabel" name="text_allow_erro">
+         <property name="text">
+          <string>近点允许误差0mm</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_allow_erro"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_12">
+       <item>
+        <widget class="QLabel" name="text_far_allow_erro">
+         <property name="text">
+          <string>远点允许误差0mm</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_far_allow_erro"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_13">
+       <item>
+        <widget class="QLabel" name="text_far_refdis">
+         <property name="text">
+          <string>原点控制参考距离0mm</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_far_refdis"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_14">
+       <item>
+        <widget class="QLabel" name="text_s_allow_diserro">
+         <property name="text">
+          <string>允许到点误差距离0mm</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_s_allow_diserro"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_15">
+       <item>
+        <widget class="QLabel" name="text_braking_dis">
+         <property name="text">
+          <string>jian su ju离0mm</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_braking_dis"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_16">
+       <item>
+        <widget class="QLabel" name="text_min_w">
+         <property name="text">
+          <string>huitan W离0mm</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_min_w"/>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="clean_targets">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>410</y>
+      <width>131</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>清除mubiao点</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>680</y>
+      <width>354</width>
+      <height>64</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout_7">
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_18">
+       <item>
+        <widget class="QLabel" name="text_org_x">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>org_x:x</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_org_x"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_6">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_17">
+         <item>
+          <widget class="QLabel" name="text_org_y">
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>200</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>org_y:y</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="set_org_y"/>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QPushButton" name="button_set_org">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>680</y>
+      <width>161</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>set_org_pose</string>
     </property>
    </widget>
   </widget>

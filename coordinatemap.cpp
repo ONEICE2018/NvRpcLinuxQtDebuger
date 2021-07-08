@@ -15,7 +15,7 @@ CoordinateMap::CoordinateMap(QWidget *parent) :
     cursor.setShape(Qt::CrossCursor);    // 设置光标形状
     setCursor(cursor);                   // 使用光标
     hisory_xys=*new QList<rpc_pose_t>;
-
+    targets_xys=*new QList<rpc_pose_t>;
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(timer_mover()));
     timer->start(66);
@@ -51,8 +51,11 @@ void CoordinateMap::mouseMoveEvent(QMouseEvent *event)
        rpc_pose_t target;
        target.x=getreal_x(x);
        target.y=getreal_y(y);
-       MainWindow::MW->setMy_target(target);
-
+       if(!Q_pressed){
+           MainWindow::MW->setMy_target(target);
+       }else{
+           MainWindow::MW->setMy_org_pose(target);
+       }
        update();
    }
    if(left_click_to_move)
@@ -102,7 +105,11 @@ void CoordinateMap::mousePressEvent(QMouseEvent *event)
           target.x=getreal_x(event->x());
           target.y=getreal_y(event->y());
 
-          MainWindow::MW->setMy_target(target);
+          if(!Q_pressed){
+              MainWindow::MW->setMy_target(target);
+          }else{
+              MainWindow::MW->setMy_org_pose(target);
+          }
 
           update();
     }
@@ -228,7 +235,29 @@ void CoordinateMap::refrash_ui()
       painter.setBrush(QBrush(Qt::yellow));
       painter.drawEllipse(line_x0-4,line_y0-4,8,8);
 
+      //draw taget
+      painter.setPen(QPen(Qt::cyan,2));
+      line_x1=getdraw_one_x(MainWindow::MW->getMy_org_pose().x);
+      line_y1=getdraw_one_y(MainWindow::MW->getMy_org_pose().y);
+      painter.drawLine(line_x0,line_y0,line_x1,line_y1);
 
+      painter.setPen(QColor(Qt::color0));
+      painter.setBrush(QBrush(Qt::color0));
+      painter.drawEllipse(line_x1-4,line_y1-4,8,8);
+
+      //jd pose
+
+      line_x0=getdraw_one_x(MainWindow::MW->getMy_nowpose().x);
+      line_y0=getdraw_one_y(MainWindow::MW->getMy_nowpose().y);
+
+      painter.setPen(QPen(Qt::color1,2));
+      line_x1=getdraw_one_x(MainWindow::MW->getMy_jd_pos().x);
+      line_y1=getdraw_one_y(MainWindow::MW->getMy_jd_pos().y);
+      painter.drawLine(line_x0,line_y0,line_x1,line_y1);
+
+      painter.setPen(QColor(Qt::color1));
+      painter.setBrush(QBrush(Qt::color1));
+      painter.drawEllipse(line_x1-4,line_y1-4,8,8);
 
 
 
@@ -237,15 +266,33 @@ void CoordinateMap::refrash_ui()
       painter.setBrush(QBrush(Qt::gray));
       float x0=MainWindow::MW->getMy_nowpose().x; //qi dian
       float y0=MainWindow::MW->getMy_nowpose().y; //qi dian
+
       float x1=MainWindow::MW->getMy_target().x; //zhong dian
       float y1=MainWindow::MW->getMy_target().y; //zhong dian
+
+      float draw_allowline_erro =  MainWindow::MW->getPid_allow_erro();
+
+      float distance=abs(sqrt(
+                             (MainWindow::MW->getMy_target().x-refrence_pose.x)
+                             *(MainWindow::MW->getMy_target().x-refrence_pose.x)
+                            +(MainWindow::MW->getMy_target().y-refrence_pose.y)
+                             *(MainWindow::MW->getMy_target().y-refrence_pose.y)
+                            ));
+
+      if(distance > MainWindow::MW->getPid_refrence_distance())
+      {
+          x1 = x0 + (MainWindow::MW->getPid_refrence_distance()/distance)*(x1 - x0);
+          y1 = y0 + (MainWindow::MW->getPid_refrence_distance()/distance)*(y1 - y0);
+          draw_allowline_erro = MainWindow::MW->getPid_refrence_allow_erro();
+      }
+
+
       float etheta=atan2(y1-y0,x1-x0);
 
-      float cx1=x1+ MainWindow::MW->getPid_allow_erro() *sin(etheta);//垂线点1
-      float cy1=y1- MainWindow::MW->getPid_allow_erro() *cos(etheta);//垂线点1
-
-      float cx2=x1- MainWindow::MW->getPid_allow_erro() *sin(etheta);//垂线点2
-      float cy2=y1+ MainWindow::MW->getPid_allow_erro() *cos(etheta);//垂线点2
+      float cx1=x1+ draw_allowline_erro *sin(etheta);//垂线点1
+      float cy1=y1- draw_allowline_erro *cos(etheta);//垂线点1
+      float cx2=x1- draw_allowline_erro *sin(etheta);//垂线点2
+      float cy2=y1+ draw_allowline_erro *cos(etheta);//垂线点2
 
 
       line_x0=getdraw_one_x(MainWindow::MW->getMy_nowpose().x);
@@ -258,22 +305,48 @@ void CoordinateMap::refrash_ui()
       line_y1=getdraw_one_y(cy2);
       painter.drawLine(line_x0,line_y0,line_x1,line_y1);
 
-      painter.setPen(QPen(Qt::green,1));
-      painter.setBrush(QBrush(Qt::green));
+      painter.setPen(QPen(Qt::black,1));
+      painter.setBrush(QBrush(Qt::black));
       line_x0=getdraw_one_x(cx1);
       line_y0=getdraw_one_y(cy1);
       painter.drawLine(line_x0,line_y0,line_x1,line_y1);
 
       mutex_hittory_xys.lock();
+      int count_flag=0;
       for(rpc_pose_t i: hisory_xys)
           if(hisory_xys.size()>0){
           {
               line_x0=getdraw_one_x(i.x);
               line_y0=getdraw_one_y(i.y);
-              painter.drawEllipse(line_x0-2,line_y0-2,4,4);
-          }
+              painter.drawEllipse(line_x0-1,line_y0-1,2,2);
+              count_flag++;
+              if(count_flag>=2){
+                  count_flag=1;
+                   painter.drawLine(line_x0,line_y0,line_x1,line_y1);
+
+              }
+              line_x1=getdraw_one_x(i.x);
+              line_y1=getdraw_one_y(i.y);
+
+           }
       }
      mutex_hittory_xys.unlock();
+
+    painter.setPen(QPen(Qt::red,1));
+     painter.setBrush(QBrush(Qt::red));
+
+     mutex_targets_xys.lock();
+
+     for(rpc_pose_t j: targets_xys)
+         if(targets_xys.size()>0){
+         {
+             line_x0=getdraw_one_x(j.x);
+             line_y0=getdraw_one_y(j.y);
+             painter.drawEllipse(line_x0-5,line_y0-5,10,10);
+         }
+     }
+     mutex_targets_xys.unlock();
+
      draw_texts();
 }
 
@@ -329,17 +402,36 @@ void CoordinateMap::draw_texts()
     painter.setBrush(QBrush(Qt::green));
     line_x0=getdraw_one_x(MainWindow::MW->getMy_target().x);
     line_y0=getdraw_one_y(MainWindow::MW->getMy_target().y);
+
     float distance=abs(sqrt(
                            (MainWindow::MW->getMy_target().x-refrence_pose.x)
                            *(MainWindow::MW->getMy_target().x-refrence_pose.x)
                           +(MainWindow::MW->getMy_target().y-refrence_pose.y)
                            *(MainWindow::MW->getMy_target().y-refrence_pose.y)
                           ));
+
     painter.drawText(line_x0-FONT_W,line_y0-TEXT_PY_Y,
                      QString("D:%1mm").arg(distance));
 
 
 }
+
+bool CoordinateMap::getQ_pressed() const
+{
+    return Q_pressed;
+}
+
+void CoordinateMap::setQ_pressed(bool value)
+{
+    Q_pressed = value;
+}
+
+QList<rpc_pose_t> CoordinateMap::getTargets_xys() const
+{
+    return targets_xys;
+}
+
+
 
 void CoordinateMap::setOrg_is_bot(bool value)
 {
@@ -431,5 +523,19 @@ void CoordinateMap::append_hisory_xys(rpc_pose_t his){
     mutex_hittory_xys.lock();
     hisory_xys.append(his);
     mutex_hittory_xys.unlock();
+}
+
+void CoordinateMap::clear_target_xys()
+{
+    mutex_targets_xys.lock();
+    targets_xys.clear();
+    mutex_targets_xys.unlock();
+}
+
+void CoordinateMap::append_target_xys(rpc_pose_t tgs)
+{
+    mutex_targets_xys.lock();
+    targets_xys.append(tgs);
+    mutex_targets_xys.unlock();
 }
 

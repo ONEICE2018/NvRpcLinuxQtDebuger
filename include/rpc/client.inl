@@ -18,8 +18,8 @@ RPCLIB_MSGPACK::object_handle client::call(std::string const &func_name,
 template <typename... Args>
 std::future<RPCLIB_MSGPACK::object_handle>
 client::async_call(std::string const &func_name, Args... args) {
-    RPCLIB_CREATE_LOG_CHANNEL(client)
-    wait_conn();
+    RPCLIB_CREATE_LOG_CHANNEL(client) wait_conn();
+
     using RPCLIB_MSGPACK::object;
     LOG_DEBUG("Calling {}", func_name);
 

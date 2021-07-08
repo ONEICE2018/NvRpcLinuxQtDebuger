@@ -26,10 +26,18 @@ public:
     void clear_hisory_xys(void);
     void append_hisory_xys(rpc_pose_t his);
 
+    void clear_target_xys(void);
+    void append_target_xys(rpc_pose_t tgs);
+
     void setRefrence_pose(const rpc_pose_t &value);
 
     void setOrg_is_bot(bool value);
     void set_Org_back_bot(void);
+
+    QList<rpc_pose_t> getTargets_xys() const;
+
+    bool getQ_pressed() const;
+    void setQ_pressed(bool value);
 
 signals:
     void my_Range_xy_canged();
@@ -58,15 +66,20 @@ private:
     int  Range_xy=4000;
     void draw_texts();
     bool mouse_pressed{false};
+    bool Q_pressed{false};
     bool left_click_to_move{false};
 
     QMutex mutex_hittory_xys;
     QList<rpc_pose_t> hisory_xys;// you ge keng
+    QMutex mutex_targets_xys;
+    QList<rpc_pose_t> targets_xys;
     bool org_is_bot{true};
     rpc_pose_t refrence_pose;
 
+
     int move_p_x{1};
     int move_p_y{1};
+
 
 };
 
