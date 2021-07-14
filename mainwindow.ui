@@ -30,8 +30,8 @@
    <widget class="QLabel" name="text_nowpose">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>190</y>
+      <x>10</x>
+      <y>280</y>
       <width>151</width>
       <height>71</height>
      </rect>
@@ -69,8 +69,8 @@ w:0</string>
    <widget class="QPushButton" name="button_set_target">
     <property name="geometry">
      <rect>
-      <x>340</x>
-      <y>100</y>
+      <x>330</x>
+      <y>120</y>
       <width>89</width>
       <height>25</height>
      </rect>
@@ -78,71 +78,6 @@ w:0</string>
     <property name="text">
      <string>set_target</string>
     </property>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>270</y>
-      <width>271</width>
-      <height>128</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_6">
-         <item>
-          <widget class="QLabel" name="text_kp">
-           <property name="text">
-            <string>kp:00</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="set_kp"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_7">
-         <item>
-          <widget class="QLabel" name="text_ki">
-           <property name="text">
-            <string>ki:00</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="set_ki"/>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_8">
-         <item>
-          <widget class="QLabel" name="text_kd">
-           <property name="text">
-            <string>kd:00</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="set_kd"/>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QPushButton" name="enable_pid_run">
-       <property name="text">
-        <string>enable_pid_run</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -237,8 +172,8 @@ w:0</string>
    <widget class="QPushButton" name="global_clean">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>220</y>
+      <x>340</x>
+      <y>370</y>
       <width>91</width>
       <height>51</height>
      </rect>
@@ -250,8 +185,8 @@ w:0</string>
    <widget class="QPushButton" name="pass_clean">
     <property name="geometry">
      <rect>
-      <x>300</x>
-      <y>280</y>
+      <x>340</x>
+      <y>430</y>
       <width>91</width>
       <height>51</height>
      </rect>
@@ -282,7 +217,7 @@ w:0</string>
        <item>
         <widget class="QLineEdit" name="set_rpc_IP">
          <property name="text">
-          <string>192.168.1.100</string>
+          <string>192.168.3.121</string>
          </property>
         </widget>
        </item>
@@ -355,8 +290,8 @@ w:0</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>410</y>
+      <x>30</x>
+      <y>580</y>
       <width>191</width>
       <height>27</height>
      </rect>
@@ -377,9 +312,9 @@ w:0</string>
    <widget class="QPushButton" name="clean_history">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>380</y>
-      <width>89</width>
+      <x>328</x>
+      <y>510</y>
+      <width>81</width>
       <height>25</height>
      </rect>
     </property>
@@ -391,10 +326,10 @@ w:0</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>450</y>
-      <width>307</width>
-      <height>194</height>
+      <x>20</x>
+      <y>763</y>
+      <width>311</width>
+      <height>211</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -441,20 +376,6 @@ w:0</string>
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_14">
-       <item>
-        <widget class="QLabel" name="text_s_allow_diserro">
-         <property name="text">
-          <string>允许到点误差距离0mm</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="set_s_allow_diserro"/>
-       </item>
-      </layout>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_15">
        <item>
         <widget class="QLabel" name="text_braking_dis">
@@ -488,7 +409,7 @@ w:0</string>
     <property name="geometry">
      <rect>
       <x>300</x>
-      <y>410</y>
+      <y>540</y>
       <width>131</width>
       <height>25</height>
      </rect>
@@ -500,9 +421,9 @@ w:0</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>680</y>
-      <width>354</width>
+      <x>10</x>
+      <y>210</y>
+      <width>267</width>
       <height>64</height>
      </rect>
     </property>
@@ -568,15 +489,162 @@ w:0</string>
    <widget class="QPushButton" name="button_set_org">
     <property name="geometry">
      <rect>
-      <x>390</x>
-      <y>680</y>
-      <width>161</width>
+      <x>290</x>
+      <y>230</y>
+      <width>121</width>
       <height>25</height>
      </rect>
     </property>
     <property name="text">
      <string>set_org_pose</string>
     </property>
+   </widget>
+   <widget class="QPushButton" name="enable_pid_run">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>490</y>
+      <width>139</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>enable_pid_run</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>380</y>
+      <width>301</width>
+      <height>99</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_22">
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLabel" name="text_kp">
+             <property name="text">
+              <string>角度kp:00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="set_kp"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QLabel" name="text_ki">
+             <property name="text">
+              <string>角度ki:00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="set_ki"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLabel" name="text_kd">
+             <property name="text">
+              <string>角度kd:00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="set_kd"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_9">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_19">
+           <item>
+            <widget class="QLabel" name="text_dkp">
+             <property name="text">
+              <string>距离kp:00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="set_dkp"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_20">
+           <item>
+            <widget class="QLabel" name="text_dki">
+             <property name="text">
+              <string>距离ki:00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="set_dki"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_21">
+           <item>
+            <widget class="QLabel" name="text_dkd">
+             <property name="text">
+              <string>距离kd:00</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="set_dkd"/>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="layoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>610</y>
+      <width>305</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_14">
+     <item>
+      <widget class="QLabel" name="text_s_allow_diserro">
+       <property name="text">
+        <string>允许到点误差距离0mm</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="set_s_allow_diserro"/>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

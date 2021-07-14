@@ -128,7 +128,7 @@ void MainWindow::see_pose()
             }
             rpc_pose_t target_poses;
             //targets
-            target_poses=c_reply->call("get_doline_pid_taget").as<rpc_pose_t>();
+            target_poses=c_reply->call("get_pid_target_pose").as<rpc_pose_t>();
             target_poses.x=target_poses.x*1000;
             target_poses.y=target_poses.y*1000;
             target_poses.theta=(target_poses.theta/MY_PI)*180;
@@ -143,10 +143,16 @@ void MainWindow::see_pose()
             }
 
             //targets
-            my_jd_pos=c_reply->call("get_pid_jd_pose").as<rpc_pose_t>();
+            my_jd_pos=c_reply->call("get_pid_jiaodian_pose").as<rpc_pose_t>();
             my_jd_pos.x=my_jd_pos.x*1000;
             my_jd_pos.y=my_jd_pos.y*1000;
 
+            my_org_pose = c_reply->call("get_pid_org_pose").as<rpc_pose_t>();
+            my_org_pose.x=my_org_pose.x*1000.0;
+            my_org_pose.y=my_org_pose.y*1000.0;
+            my_vector_pose =c_reply->call("get_pid_vector_pose").as<rpc_pose_t>();
+            my_vector_pose.x=my_vector_pose.x*1000.0;
+            my_vector_pose.y=my_vector_pose.y*1000.0;
             ui->widget_map->update();
         } catch (int e) {
 
@@ -205,57 +211,6 @@ void MainWindow::on_connect_rpc_clicked()
 
 
 
-void MainWindow::on_enble_kp_clicked()
-{
-    if(ui->enble_kp->text()=="enable_kp")
-    {
-        my_pid_mode|=0x01<<0;
-        ui->enble_kp->setText("disable_kp");
-        showMsgs("kp is enable");
-    }else{
-        my_pid_mode&=~(0x01<<0);
-        ui->enble_kp->setText("enable_kp");
-        showMsgs("kp is disabled");
-    }
-     if(c_reply!=nullptr){
-         c_reply->call("set_pid_mode",my_pid_mode);
-     }
-}
-
-void MainWindow::on_enbale_ki_clicked()
-{
-    if(ui->enbale_ki->text()=="enable_ki")
-    {
-        my_pid_mode|=0x01<<1;
-        ui->enbale_ki->setText("disable_ki");
-        showMsgs("ki is enable");
-    }else
-    {
-        my_pid_mode&=~(0x01<<1);
-        ui->enbale_ki->setText("enable_ki");
-         showMsgs("ki is disabled");
-    }
-    if(c_reply!=nullptr)
-    c_reply->call("set_pid_mode",my_pid_mode);
-}
-
-void MainWindow::on_enable_kd_clicked()
-{
-    if(ui->enable_kd->text()=="enable_kd")
-    {
-        my_pid_mode|=0x01<<2;
-        ui->enable_kd->setText("disable_kd");
-        showMsgs("kd is enable");
-    }else
-    {
-        my_pid_mode&=~(0x01<<2);
-        ui->enable_kd->setText("enable_kd");
-         showMsgs("kd is disabled");
-    }
-    if(c_reply!=nullptr)
-    c_reply->call("set_pid_mode",my_pid_mode);
-}
-
 void MainWindow::on_set_kp_returnPressed()
 {
 
@@ -264,9 +219,9 @@ void MainWindow::on_set_kp_returnPressed()
         my_kpid.kp= ui->set_kp->text().toFloat();
         if(c_reply!=nullptr)
         {
-            my_kpid=c_reply->call("set_kpid",my_kpid).as<pid_kpid_t>();
+            my_kpid=c_reply->call("set_pid_angle_kpid",my_kpid).as<pid_kpid_t>();
             showMsgs(QString("ok! set_kp %1").arg(my_kpid.kp));
-            ui->text_kp->setText(QString("kp:%1").arg(my_kpid.kp));
+            ui->text_kp->setText(QString("角度kp:%1").arg(my_kpid.kp));
 
         }
     }
@@ -279,9 +234,9 @@ void MainWindow::on_set_ki_returnPressed()
         my_kpid.ki= ui->set_ki->text().toFloat();
         if(c_reply!=nullptr)
         {
-            my_kpid=c_reply->call("set_kpid",my_kpid).as<pid_kpid_t>();
+            my_kpid=c_reply->call("set_pid_angle_kpid",my_kpid).as<pid_kpid_t>();
             showMsgs(QString("ok! set_ki %1").arg(my_kpid.ki));
-            ui->text_ki->setText(QString("ki:%1").arg(my_kpid.ki));
+            ui->text_ki->setText(QString("角度ki:%1").arg(my_kpid.ki));
         }
     }
 }
@@ -293,12 +248,65 @@ void MainWindow::on_set_kd_returnPressed()
         my_kpid.kd= ui->set_kd->text().toFloat();
         if(c_reply!=nullptr)
         {
-            my_kpid=c_reply->call("set_kpid",my_kpid).as<pid_kpid_t>();
+            my_kpid=c_reply->call("set_pid_angle_kpid",my_kpid).as<pid_kpid_t>();
             showMsgs(QString("ok! set_kd %1").arg(my_kpid.kd));
-             ui->text_kd->setText(QString("kd:%1").arg(my_kpid.kd));
+             ui->text_kd->setText(QString("角度kd:%1").arg(my_kpid.kd));
         }
     }
 }
+
+void MainWindow::on_set_dkp_returnPressed()
+{
+    if(ui->set_dkp->text()!="")
+    {
+        my_dpid.kp= ui->set_dkp->text().toFloat();
+        if(c_reply!=nullptr)
+        {
+            my_dpid=c_reply->call("set_pid_dis_kpid",my_dpid).as<pid_kpid_t>();
+            showMsgs(QString("ok! set_pid_dis_kpid %1").arg(my_dpid.kp));
+            ui->text_dkp->setText(QString("距离kp:%1").arg(my_dpid.kp));
+
+        }
+    }
+
+}
+
+void MainWindow::on_set_dki_returnPressed()
+{
+    if(ui->set_dki->text()!="")
+    {
+        my_dpid.ki= ui->set_dki->text().toFloat();
+        if(c_reply!=nullptr)
+        {
+            my_dpid=c_reply->call("set_pid_dis_kpid",my_dpid).as<pid_kpid_t>();
+            showMsgs(QString("ok! set_pid_dis_kpid %1").arg(my_dpid.ki));
+            ui->text_dki->setText(QString("距离ki:%1").arg(my_dpid.ki));
+        }
+    }
+
+}
+
+void MainWindow::on_set_dkd_returnPressed()
+{
+
+    if(ui->set_dkd->text()!="")
+    {
+        my_dpid.kd= ui->set_dkd->text().toFloat();
+        if(c_reply!=nullptr)
+        {
+            my_dpid=c_reply->call("set_pid_dis_kpid",my_dpid).as<pid_kpid_t>();
+            showMsgs(QString("ok! set_pid_dis_kpid %1").arg(my_dpid.kd));
+            ui->text_dkd->setText(QString("距离kd:%1").arg(my_dpid.kd));
+
+        }
+    }
+}
+
+rpc_pose_t MainWindow::getMy_vector_pose() const
+{
+    return my_vector_pose;
+}
+
 
 void MainWindow::on_set_target_x_returnPressed()
 {
@@ -311,7 +319,7 @@ void MainWindow::on_set_target_x_returnPressed()
         taget_m.theta=(my_target.theta/180.0)*MY_PI;
         if(c_reply!=nullptr)
         {
-             taget_m= c_reply->call("set_pid_target",taget_m).as<rpc_pose_t>();
+             taget_m= c_reply->call("set_pid_target_pose",taget_m).as<rpc_pose_t>();
 
              my_target.x=taget_m.x*1000;
              my_target.y=taget_m.y*1000;
@@ -335,7 +343,7 @@ void MainWindow::on_set_target_y_returnPressed()
 
         if(c_reply!=nullptr)
         {
-             taget_m= c_reply->call("set_pid_target",taget_m).as<rpc_pose_t>();
+             taget_m= c_reply->call("set_pid_target_pose",taget_m).as<rpc_pose_t>();
 
              my_target.x=taget_m.x*1000;
              my_target.y=taget_m.y*1000;
@@ -345,44 +353,6 @@ void MainWindow::on_set_target_y_returnPressed()
              ui->text_target_y->setText(QString("target_y:%1").arg(my_target.y));
         }
     }
-}
-
-void MainWindow::on_set_org_x_returnPressed()
-{
-
-  on_button_set_org_clicked();
-}
-
-void MainWindow::on_set_org_y_returnPressed()
-{
-   on_button_set_org_clicked();
-}
-
-rpc_pose_t MainWindow::getMy_org_pose() const
-{
-    return my_org_pose;
-}
-
-void MainWindow::setMy_org_pose(const rpc_pose_t &value)
-{
-    my_org_pose = value;
-
-    //ZH
-    rpc_pose_t org_m;
-    org_m.x=my_org_pose.x/1000;
-    org_m.y=my_org_pose.y/1000;
-    org_m.theta=0;
-      showMsgs(QString("ok! my_org_pose_x %1,my_org_pose_y %2").arg(my_org_pose.x).arg(my_org_pose.y));
-    if(c_reply!=nullptr)
-    {
-         org_m= c_reply->call("set_org_pose",org_m).as<rpc_pose_t>();
-         my_org_pose.x=org_m.x*1000;
-         my_org_pose.y=org_m.y*1000;
-         showMsgs(QString("ok! my_org_pose_x %1,my_org_pose_y %2").arg(my_org_pose.x).arg(my_org_pose.y));
-         ui->text_org_x->setText(QString("org_x:%1").arg(my_org_pose.x));
-         ui->text_org_y->setText(QString("org_y:%1").arg(my_org_pose.y));
-    }
-
 }
 
 
@@ -402,7 +372,7 @@ void MainWindow::on_set_target_theta_returnPressed()
 
         if(c_reply!=nullptr)
         {
-             taget_m= c_reply->call("set_pid_target",taget_m).as<rpc_pose_t>();
+             taget_m= c_reply->call("set_pid_target_pose",taget_m).as<rpc_pose_t>();
 
              my_target.x=taget_m.x*1000;
              my_target.y=taget_m.y*1000;
@@ -437,7 +407,7 @@ void MainWindow::on_button_set_target_clicked()
 
     if(c_reply!=nullptr)
     {
-         taget_m= c_reply->call("set_pid_target",taget_m).as<rpc_pose_t>();
+         taget_m= c_reply->call("set_pid_target_pose",taget_m).as<rpc_pose_t>();
 
          my_target.x=taget_m.x*1000;
          my_target.y=taget_m.y*1000;
@@ -451,6 +421,44 @@ void MainWindow::on_button_set_target_clicked()
 
 }
 
+
+void MainWindow::on_set_org_x_returnPressed()
+{
+
+  on_button_set_org_clicked();
+}
+
+void MainWindow::on_set_org_y_returnPressed()
+{
+   on_button_set_org_clicked();
+}
+
+rpc_pose_t MainWindow::getMy_org_pose() const
+{
+    return my_org_pose;
+}
+
+void MainWindow::setMy_org_pose(const rpc_pose_t &value)
+{
+    my_org_pose = value;
+
+    //ZH
+    rpc_pose_t org_m;
+    org_m.x=my_org_pose.x/1000;
+    org_m.y=my_org_pose.y/1000;
+    org_m.theta=0;
+      showMsgs(QString("ok! my_org_pose_x %1,my_org_pose_y %2").arg(my_org_pose.x).arg(my_org_pose.y));
+    if(c_reply!=nullptr)
+    {
+         org_m= c_reply->call("set_pid_org_pose",org_m).as<rpc_pose_t>();
+         my_org_pose.x=org_m.x*1000;
+         my_org_pose.y=org_m.y*1000;
+         showMsgs(QString("ok! my_org_pose_x %1,my_org_pose_y %2").arg(my_org_pose.x).arg(my_org_pose.y));
+         ui->text_org_x->setText(QString("org_x:%1").arg(my_org_pose.x));
+         ui->text_org_y->setText(QString("org_y:%1").arg(my_org_pose.y));
+    }
+
+}
 void MainWindow::on_button_set_org_clicked()
 {
     if(ui->set_org_x->text()!="")
@@ -472,7 +480,7 @@ void MainWindow::on_button_set_org_clicked()
 
     if(c_reply!=nullptr)
     {
-         org_m= c_reply->call("set_org_pose",org_m).as<rpc_pose_t>();
+         org_m= c_reply->call("set_pid_org_pose",org_m).as<rpc_pose_t>();
          my_org_pose.x=org_m.x*1000;
          my_org_pose.y=org_m.y*1000;
          showMsgs(QString("ok! my_org_pose_x %1,my_org_pose_y %2").arg(my_org_pose.x).arg(my_org_pose.y));
@@ -501,7 +509,7 @@ void MainWindow::on_enable_pid_run_clicked()
     {
         if(c_reply!=nullptr)
         {
-            c_reply->call("enable_do_pid",true);
+            c_reply->call("set_pid_tester_run",true);
             ui->enable_pid_run->setText("disable_pid_run");
             showMsgs("pid_run is enabled");
         }
@@ -509,7 +517,7 @@ void MainWindow::on_enable_pid_run_clicked()
     {
         if(c_reply!=nullptr)
         {
-            c_reply->call("enable_do_pid",false);
+            c_reply->call("set_pid_tester_run",false);
             ui->enable_pid_run->setText("enable_pid_run");
             showMsgs("pid_run is disabled");
         }
@@ -554,7 +562,7 @@ void MainWindow::setMy_target(const rpc_pose_t &value)
     taget_m.y=my_target.y/1000;
     if(c_reply!=nullptr)
     {
-         taget_m= c_reply->call("set_pid_target",taget_m).as<rpc_pose_t>();
+         taget_m= c_reply->call("set_pid_target_pose",taget_m).as<rpc_pose_t>();
 
          my_target.x=taget_m.x*1000;
          my_target.y=taget_m.y*1000;
@@ -596,7 +604,7 @@ void MainWindow::on_set_pid_v_returnPressed()
         pid_set_v= ui->set_pid_v->text().toFloat();
         if(c_reply!=nullptr)
         {
-             c_reply->call("set_pid_v",pid_set_v);
+             c_reply->call("set_pid_set_v",pid_set_v);
              showMsgs(QString("ok! set_pid_v %1").arg(pid_set_v));
              ui->text_pid_v->setText(QString("pid_v:%1").arg(pid_set_v));
         }
@@ -669,7 +677,7 @@ void MainWindow::on_set_s_allow_diserro_returnPressed()
         setPid_S_allow_diserro(ui->set_s_allow_diserro->text().toFloat());
         if(c_reply!=nullptr)
         {
-            setPid_S_allow_diserro(1000.0*c_reply->call("set_pid_S_allow_diserro",getPid_S_allow_diserro()/1000.0).as<float>());
+            setPid_S_allow_diserro(1000.0*c_reply->call("set_pid_arrive_erro_dis",getPid_S_allow_diserro()/1000.0).as<float>());
             showMsgs(QString("ok! pid_refrence_distance %1 mm").arg(getPid_S_allow_diserro()));
             ui->text_s_allow_diserro->setText(QString("允许到点误差距离%1mm").arg(getPid_S_allow_diserro()));
         }
@@ -765,5 +773,6 @@ void MainWindow::setPid_min_w(float value)
 {
     pid_min_w = value;
 }
+
 
 

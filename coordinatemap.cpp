@@ -259,6 +259,15 @@ void CoordinateMap::refrash_ui()
       painter.setBrush(QBrush(Qt::color1));
       painter.drawEllipse(line_x1-4,line_y1-4,8,8);
 
+      line_x1=getdraw_one_x(MainWindow::MW->getMy_vector_pose().x);
+      line_y1=getdraw_one_y(MainWindow::MW->getMy_vector_pose().y);
+      painter.drawLine(line_x0,line_y0,line_x1,line_y1);
+
+      painter.setPen(QColor(Qt::color0));
+      painter.setBrush(QBrush(Qt::color0));
+      painter.drawEllipse(line_x1-4,line_y1-4,8,8);
+      //w_vector
+
 
 
       //绘制偏差范围
@@ -336,13 +345,28 @@ void CoordinateMap::refrash_ui()
      painter.setBrush(QBrush(Qt::red));
 
      mutex_targets_xys.lock();
-
+     rpc_pose_t lastpose;
+     bool is_not_first=false;
+     painter.setPen(QPen(Qt::blue,2));
      for(rpc_pose_t j: targets_xys)
          if(targets_xys.size()>0){
          {
+
              line_x0=getdraw_one_x(j.x);
              line_y0=getdraw_one_y(j.y);
              painter.drawEllipse(line_x0-5,line_y0-5,10,10);
+
+             if(!is_not_first)
+             {
+               is_not_first=true;
+             }else{
+
+                 line_x1=getdraw_one_x(lastpose.x);
+                 line_y1=getdraw_one_y(lastpose.y);
+                 painter.drawLine(line_x0,line_y0,line_x1,line_y1);
+             }
+             lastpose=j;
+
          }
      }
      mutex_targets_xys.unlock();

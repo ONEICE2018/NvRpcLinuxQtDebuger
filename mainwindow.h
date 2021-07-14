@@ -66,6 +66,8 @@ public:
     rpc_pose_t getMy_jd_pos() const;
     void setMy_jd_pos(const rpc_pose_t &value);
 
+    rpc_pose_t getMy_vector_pose() const;
+
 protected:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
@@ -75,11 +77,7 @@ private slots:
     void map_Range_xy_cahnged();
     void on_connect_rpc_clicked();
 
-    void on_enble_kp_clicked();
 
-    void on_enbale_ki_clicked();
-
-    void on_enable_kd_clicked();
 
     void on_set_kp_returnPressed();
 
@@ -129,6 +127,12 @@ private slots:
 
     void on_button_set_org_clicked();
 
+    void on_set_dkp_returnPressed();
+
+    void on_set_dki_returnPressed();
+
+    void on_set_dkd_returnPressed();
+
 private:
     Ui::MainWindow *ui;
     rpc::client* c_reply = nullptr;
@@ -136,7 +140,11 @@ private:
     rpc_pose_t my_org_pose;
     rpc_pose_t my_nowpose;
     rpc_pose_t my_jd_pos;
+    rpc_pose_t my_vector_pose;
     pid_kpid_t my_kpid;
+
+    pid_kpid_t my_dpid;
+
     float pid_set_v;
     int my_pid_mode=0x01; //bit 1 enable kp,bit 2 enable ki, bit 3 enable kd
     float pid_allow_erro{0.01};
