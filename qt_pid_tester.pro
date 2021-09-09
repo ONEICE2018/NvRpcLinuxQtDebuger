@@ -18,15 +18,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     coordinatemap.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    widget_machine_status.cpp
 
 HEADERS += \
     coordinatemap.h \
-    mainwindow.h
+    mainwindow.h \
+    widget_machine_status.h
 
 FORMS += \
     coordinatemap.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    widget_machine_status.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

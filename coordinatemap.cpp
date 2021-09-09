@@ -14,11 +14,12 @@ CoordinateMap::CoordinateMap(QWidget *parent) :
     QCursor cursor;                      // 创建光标对象
     cursor.setShape(Qt::CrossCursor);    // 设置光标形状
     setCursor(cursor);                   // 使用光标
-    hisory_xys=*new QList<rpc_pose_t>;
+    hisory_xys=*new QList<history_datas>;
     targets_xys=*new QList<rpc_pose_t>;
     QTimer *timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(timer_mover()));
     timer->start(66);
+    ui->dial_show_hisbot->setVisible(false);
 }
 
 CoordinateMap::~CoordinateMap()
@@ -208,6 +209,81 @@ void CoordinateMap::refrash_ui()
 
       ui->dial_show_bot->setValue(t);
 
+      //draw_history_bot
+      if(getHisplay_enable())
+      {
+          ui->hisbot_vw->setVisible(true);
+          history_datas iplayhis;
+         if(getHisplay_index()<hisory_xys.size())
+         {
+            iplayhis=hisory_xys[getHisplay_index()];
+            //drawo bot
+            line_x0=getdraw_one_x(iplayhis.hisory_xys.x);
+            line_y0=getdraw_one_y(iplayhis.hisory_xys.y);
+            ui->dial_show_hisbot->setGeometry(line_x0-BOT_L/2.0/Pxy+2,line_y0+2-BOT_L/2.0/Pxy,BOT_L/Pxy,BOT_L/Pxy);
+            //0~360 ni shizheng 0 zai zui xia
+            int t=iplayhis.hisory_xys.theta;
+
+            QString mainstat,cleanstat;
+            if(MainWindow::MW->getMachine_main_status().contains(iplayhis.mainstatus))
+            {
+                mainstat=MainWindow::MW->getMachine_main_status().value(iplayhis.mainstatus);
+            }else{
+                mainstat=QString("出现了不存在的状态！");
+            }
+            if(MainWindow::MW->getMachine_clean_status().contains(iplayhis.clean_stat))
+            {
+                cleanstat=MainWindow::MW->getMachine_clean_status().value(iplayhis.clean_stat);
+            }else{
+                cleanstat=QString("出现了不存在的状态！");
+            }
+
+            QString statu="机器状态:";
+            switch(iplayhis.ecinfint>>5 &0x0F)
+            {
+                case 0:statu.append("待机中");break;
+                case 1:statu.append("休眠");break;
+                case 2:statu.append("工作");break;
+                case 3:statu.append("暂停态");break;
+                case 4:statu.append("回充路上");break;
+                case 5:statu.append("充电中");break;
+                case 6:statu.append("充电完成");break;
+                case 7:statu.append("回洗路上");break;
+                case 8:statu.append("清洗中");break;
+                case 9:statu.append("清洗完成");break;
+                case 10:statu.append("清理路上");break;
+                case 11:statu.append("清理中");break;
+                case 12:statu.append("清理完成");break;
+                case 13:statu.append("故障");break;
+                case 14:statu.append("遥控");break;
+                case 15:statu.append("关机");break;
+                case 16:statu.append("跑机模式");break;
+            }
+
+
+            ui->hisbot_vw->setText(QString("Mainstat:%1 \ncleanstat:%2 \nhis:w %3 v %4 \n%5 ").arg(mainstat).arg(cleanstat).arg(iplayhis.w).arg(iplayhis.v).arg(statu));
+
+            if(t>0){ //0~180
+                t=90+t;
+            }else if(t>-90){
+                    t=90+t;
+            }else{
+                 t=450+t;
+            }
+
+            ui->dial_show_hisbot->setValue(t);
+            ui->dial_show_hisbot->setVisible(true);
+         }else
+         {
+             ui->dial_show_hisbot->setVisible(false);
+         }
+
+      }else{
+          ui->hisbot_vw->setVisible(false);
+          ui->dial_show_hisbot->setVisible(false);
+      }
+
+
 
       //绘制坐标轴x
       painter.setPen(QPen(Qt::blue,1));//设置画笔形式  或者Qpen pen; pen.setColor(QColor(40, 115, 216)); pen.setWidth(2);
@@ -322,11 +398,11 @@ void CoordinateMap::refrash_ui()
 
       mutex_hittory_xys.lock();
       int count_flag=0;
-      for(rpc_pose_t i: hisory_xys)
+      for(history_datas i: hisory_xys)
           if(hisory_xys.size()>0){
           {
-              line_x0=getdraw_one_x(i.x);
-              line_y0=getdraw_one_y(i.y);
+              line_x0=getdraw_one_x(i.hisory_xys.x);
+              line_y0=getdraw_one_y(i.hisory_xys.y);
               painter.drawEllipse(line_x0-1,line_y0-1,2,2);
               count_flag++;
               if(count_flag>=2){
@@ -334,8 +410,8 @@ void CoordinateMap::refrash_ui()
                    painter.drawLine(line_x0,line_y0,line_x1,line_y1);
 
               }
-              line_x1=getdraw_one_x(i.x);
-              line_y1=getdraw_one_y(i.y);
+              line_x1=getdraw_one_x(i.hisory_xys.x);
+              line_y1=getdraw_one_y(i.hisory_xys.y);
 
            }
       }
@@ -373,6 +449,8 @@ void CoordinateMap::refrash_ui()
 
      draw_texts();
 }
+
+
 
 #define TEXT_PY_Y 3
 #define FONT_W 85
@@ -440,6 +518,28 @@ void CoordinateMap::draw_texts()
 
 }
 
+bool CoordinateMap::getHisplay_enable() const
+{
+    return hisplay_enable;
+}
+
+void CoordinateMap::setHisplay_enable(bool value)
+{
+    hisplay_enable = value;
+}
+
+
+
+int CoordinateMap::getHisplay_index() const
+{
+    return hisplay_index;
+}
+
+void CoordinateMap::setHisplay_index(int value)
+{
+    hisplay_index = value;
+}
+
 bool CoordinateMap::getQ_pressed() const
 {
     return Q_pressed;
@@ -492,7 +592,7 @@ void CoordinateMap::setRefrence_pose(const rpc_pose_t &value)
 
 
 
-QList<rpc_pose_t> CoordinateMap::getHisory_xys() const
+QList<history_datas> CoordinateMap::getHisory_xys() const
 {
     return hisory_xys;
 }
@@ -543,7 +643,7 @@ void CoordinateMap::clear_hisory_xys(void){
     hisory_xys.clear();
     mutex_hittory_xys.unlock();
 }
-void CoordinateMap::append_hisory_xys(rpc_pose_t his){
+void CoordinateMap::append_hisory_xys(history_datas his){
     mutex_hittory_xys.lock();
     hisory_xys.append(his);
     mutex_hittory_xys.unlock();

@@ -6,7 +6,16 @@
 #include "QMoveEvent"
 #include "QPainter"
 #include "mainwindow.h"
+struct history_datas
+{
+     rpc_pose_t hisory_xys;
+     float w;
+     float v;
+     int mainstatus;
+     int clean_stat;
+     uint16_t ecinfint;
 
+};
 namespace Ui {
 class CoordinateMap;
 }
@@ -22,9 +31,9 @@ public:
 
     int getRange_xy() const;
     void setRange_xy(int value);
-    QList<rpc_pose_t> getHisory_xys() const;
+    QList<history_datas> getHisory_xys() const;
     void clear_hisory_xys(void);
-    void append_hisory_xys(rpc_pose_t his);
+    void append_hisory_xys(history_datas his);
 
     void clear_target_xys(void);
     void append_target_xys(rpc_pose_t tgs);
@@ -38,6 +47,13 @@ public:
 
     bool getQ_pressed() const;
     void setQ_pressed(bool value);
+
+
+    int getHisplay_index() const;
+    void setHisplay_index(int value);
+
+    bool getHisplay_enable() const;
+    void setHisplay_enable(bool value);
 
 signals:
     void my_Range_xy_canged();
@@ -65,16 +81,28 @@ private:
     bool draw_target{false};
     int  Range_xy=4000;
     void draw_texts();
+
+
+
     bool mouse_pressed{false};
     bool Q_pressed{false};
     bool left_click_to_move{false};
 
     QMutex mutex_hittory_xys;
-    QList<rpc_pose_t> hisory_xys;// you ge keng
+
+    QList<history_datas> hisory_xys;// you ge keng
+
     QMutex mutex_targets_xys;
     QList<rpc_pose_t> targets_xys;
+
     bool org_is_bot{true};
     rpc_pose_t refrence_pose;
+
+    //play_history
+
+    bool hisplay_enable{false};
+
+    int  hisplay_index{0};
 
 
     int move_p_x{1};

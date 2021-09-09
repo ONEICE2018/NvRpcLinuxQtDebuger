@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>widget_machine_status</class>
+ <widget class="QWidget" name="widget_machine_status">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>864</width>
+    <height>647</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLabel" name="text_alarm_msgs">
+   <property name="geometry">
+    <rect>
+     <x>290</x>
+     <y>30</y>
+     <width>221</width>
+     <height>591</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">font: 8pt &quot;Ubuntu&quot;;
+color: rgb(92, 35, 35);</string>
+   </property>
+   <property name="text">
+    <string>0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>261</width>
+     <height>569</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="spacing">
+       <number>2</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="sensor_lWheelCnt">
+        <property name="text">
+         <string>左轮码盘值:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_rWheelCnt">
+        <property name="text">
+         <string>右轮码盘值</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_s_pitch">
+        <property name="text">
+         <string>pitch</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_s_yaw">
+        <property name="text">
+         <string>Yaw</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_s_roll">
+        <property name="text">
+         <string>Roll</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_s_xAcc">
+        <property name="text">
+         <string>X-accel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_s_yAcc">
+        <property name="text">
+         <string>Y-accel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_s_zAcc">
+        <property name="text">
+         <string>Z-accel</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_alarmInt">
+        <property name="text">
+         <string>报警信号</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_borderDist">
+        <property name="text">
+         <string>沿边距离</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_battInt">
+        <property name="text">
+         <string>电池电量</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_v">
+        <property name="text">
+         <string>V</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_w">
+        <property name="text">
+         <string>W</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_q0">
+        <property name="text">
+         <string>q0</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_q1">
+        <property name="text">
+         <string>q1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_q2">
+        <property name="text">
+         <string>q2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_q3">
+        <property name="text">
+         <string>q3</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_3">
+      <property name="spacing">
+       <number>2</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_0">
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_1">
+        <property name="text">
+         <string>1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_2">
+        <property name="text">
+         <string>2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_3">
+        <property name="text">
+         <string>3</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_4">
+        <property name="text">
+         <string>4</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_5">
+        <property name="text">
+         <string>5</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_6">
+        <property name="text">
+         <string>6</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_7">
+        <property name="text">
+         <string>7</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_8">
+        <property name="text">
+         <string>8</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_9">
+        <property name="text">
+         <string>9</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_10">
+        <property name="text">
+         <string>10</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_11">
+        <property name="text">
+         <string>11</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_12">
+        <property name="text">
+         <string>12</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_13">
+        <property name="text">
+         <string>13</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_14">
+        <property name="text">
+         <string>14</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_eCInfrInt_15">
+        <property name="text">
+         <string>15</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>540</x>
+     <y>0</y>
+     <width>258</width>
+     <height>631</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_5">
+    <item>
+     <widget class="QTextBrowser" name="showmsgs">
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>100</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
+       <widget class="QLabel" name="sensor_machine_now_status">
+        <property name="text">
+         <string>状态机：当前状态</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_machine_now_statu">
+        <property name="text">
+         <string>状态：当前状态</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="sensor_system_time">
+        <property name="text">
+         <string>机器运行时间:</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <property name="spacing">
+       <number>2</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="text_protect_land_enable">
+        <property name="text">
+         <string>地检使能</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_curr_left_brush">
+        <property name="text">
+         <string>左边刷电流</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_curr_right_brush">
+        <property name="text">
+         <string>右边刷电流</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_curr_left_wheel">
+        <property name="text">
+         <string>左轮电流</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_curr_right_wheel">
+        <property name="text">
+         <string>右轮电流</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_curr_midle_wheel">
+        <property name="text">
+         <string>中扫电流</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_curr_mop">
+        <property name="text">
+         <string>拖布电机电流</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_curr_left_fan">
+        <property name="text">
+         <string>风机电流</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_exestatu_mop_down_button">
+        <property name="text">
+         <string>拖布下微动</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_exestatu_mop_up_button">
+        <property name="text">
+         <string>拖布上微动</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_exestatu_midle_brush">
+        <property name="text">
+         <string>中扫开启</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_exestatu_side_brush">
+        <property name="text">
+         <string>边扫开启</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_exestatu_fan">
+        <property name="text">
+         <string>风机开启</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_land_left_value">
+        <property name="text">
+         <string>左地检值</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_land_right_value">
+        <property name="text">
+         <string>右地检值</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_land_front_value">
+        <property name="text">
+         <string>前地检值</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
