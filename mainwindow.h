@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "widget_pid_curve.h"
 #include <rpc/client.h>
 #include "rpc/this_handler.h"
 #include <thread>
@@ -12,6 +13,8 @@
 #include <QKeyEvent>
 #include "ui_coordinatemap.h"
 #include "QListWidget"
+
+
 #define MY_PI 3.141592
 enum BOTVERSION
 {
@@ -283,6 +286,7 @@ protected:
    virtual void keyReleaseEvent(QKeyEvent *event);
 
 private slots:
+    void roate_test_time_out();
     void see_pose();
     void draw_hisbot();
     void map_Range_xy_cahnged();
@@ -402,6 +406,14 @@ private slots:
 
 
 
+    void on_set_angle_returnPressed();
+
+    void on_button_roate_test_clicked();
+
+    void on_set_roate_test_r_returnPressed();
+
+    void on_goto_realtime_widget_clicked();
+
 private:
     Ui::MainWindow *ui;
     rpc::client* c_reply = nullptr;
@@ -439,11 +451,16 @@ private:
 
     QMap<QString,int> *set_string_cmds;
     my_set_vw my_vw;
+    int rotate_test_angle=0;
+    uint16_t roate_test_r=0;
     time_struct my_syc_time{2021,7,21,17,0,0};
     void get_syc_time(time_struct syc);
     QMap<int,QString> machine_main_status;
     QMap<int,QString> machine_clean_status;
     BOTVERSION DEVICE_VERSION{DEVICE_T10};
+
+    widget_pid_curve *my_widget_pid_curve=nullptr;
+
 };
 
 #endif // MAINWINDOW_H

@@ -1081,10 +1081,15 @@ void MainWindow::on_set_V_returnPressed()
 {
     if(ui->set_V->text()!="")
     {
-        my_vw.v = ui->set_V->text().toUInt();
+        my_vw.v = ui->set_V->text().toInt();
         if(my_vw.v>300){
             my_vw.v=300;
         }
+        if( my_vw.v<-300){
+
+            my_vw.v=-300;
+        }
+
         ui->text_set_V->setText(QString("set_V:%1").arg(my_vw.v));
     }
 }
@@ -1094,10 +1099,14 @@ void MainWindow::on_set_W_returnPressed()
     if(ui->set_W->text()!="")
     {
 
-        my_vw.w = ui->set_W->text().toUInt();
+        my_vw.w = ui->set_W->text().toInt();
         if(my_vw.w>1000)
         {
             my_vw.w=1000;
+        }
+        if(my_vw.w<-1000)
+        {
+            my_vw.w=-1000;
         }
         ui->text_set_W->setText(QString("set_W:%1").arg(my_vw.w));
     }
@@ -1406,3 +1415,82 @@ rpc_panel_data_part2 MainWindow::getMy_panel_data_part2() const
 }
 
 
+
+void MainWindow::on_set_angle_returnPressed()
+{
+
+    if(ui->set_angle->text().toInt()!=0){
+        rotate_test_angle = ui->set_angle->text().toInt();
+    }
+
+}
+void MainWindow::on_set_roate_test_r_returnPressed()
+{
+    if(ui->set_angle->text().toInt()!=0){
+        roate_test_r = ui->set_roate_test_r->text().toInt();
+    }
+}
+
+QTimer *roate_timer =nullptr;
+void MainWindow::on_button_roate_test_clicked()
+{
+
+    if(roate_timer==nullptr){
+        roate_timer= new QTimer(this);
+        connect(roate_timer, SIGNAL(timeout()), this, SLOT(roate_test_time_out()));
+    }else{
+        roate_test_time_out();
+    }
+    int roate_time=0;
+    //v=w*r;
+
+
+    if(rotate_test_angle>0){
+        my_vw.w=360;
+        my_vw.v=(10*roate_test_r)*((float)my_vw.w/10.0/180.0*3.1415);
+    }else{
+        my_vw.w=-360;
+        my_vw.v =(10*roate_test_r)*((float)my_vw.w/10.0/180.0*3.1415);
+        my_vw.v = 0-abs( my_vw.v);
+    }
+
+    my_vw = c_reply->call("remote_control_set_my_vw",my_vw).as<my_set_vw>();
+
+    ui->text_set_W->setText(QString("set_W:%1").arg(my_vw.w));
+    ui->text_set_V->setText(QString("set_V:%1").arg(my_vw.v));
+
+    roate_time = (1000.0*((float)rotate_test_angle/((float)my_vw.w/10.0)));//36 du/s
+    roate_timer->start(roate_time);
+
+}
+void MainWindow::roate_test_time_out(){
+    my_vw.v=0;
+    my_vw.w=0;
+    my_vw = c_reply->call("remote_control_set_my_vw",my_vw).as<my_set_vw>();
+    ui->text_set_W->setText(QString("set_W:%1").arg(my_vw.w));
+    ui->text_set_V->setText(QString("set_V:%1").arg(my_vw.v));
+    roate_timer->stop();
+}
+
+
+
+void MainWindow::on_goto_realtime_widget_clicked()
+{
+    if(my_widget_pid_curve==nullptr) {
+           my_widget_pid_curve =new widget_pid_curve();
+       } else {
+           if(my_widget_pid_curve->isHidden()) {
+
+           }
+       }
+
+       if (my_widget_pid_curve->isMinimized()) {
+           my_widget_pid_curve->showNormal();
+       }
+   //设置窗口置顶
+   //            ::SetWindowPos(HWND(my_setings->winId()), HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+   //            ::SetWindowPos(HWND(my_setings->winId()), HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
+
+       my_widget_pid_curve->show();
+       my_widget_pid_curve->activateWindow();
+}

@@ -943,15 +943,53 @@ w:0</string>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>560</x>
-      <y>620</y>
-      <width>221</width>
-      <height>210</height>
+      <x>540</x>
+      <y>610</y>
+      <width>241</width>
+      <height>298</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_16">
+     <property name="spacing">
+      <number>3</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_37">
+       <item>
+        <widget class="QLabel" name="text_set_W_2">
+         <property name="text">
+          <string>转动角度:00度</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_angle"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_39">
+       <item>
+        <widget class="QLabel" name="text_set_W_4">
+         <property name="text">
+          <string>转动半径:00cm</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="set_roate_test_r"/>
+       </item>
+      </layout>
+     </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_12">
+       <item>
+        <widget class="QPushButton" name="button_roate_test">
+         <property name="text">
+          <string>roat_test</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_23">
          <item>
@@ -1264,6 +1302,19 @@ w:0</string>
      <string>Mainstatu:..cleanstat:...</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="goto_realtime_widget">
+    <property name="geometry">
+     <rect>
+      <x>1300</x>
+      <y>710</y>
+      <width>89</width>
+      <height>25</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>动态曲线</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -1281,7 +1332,7 @@ w:0</string>
   <customwidget>
    <class>CoordinateMap</class>
    <extends>QWidget</extends>
-   <header location="global">coordinatemap.h</header>
+   <header>coordinatemap.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
