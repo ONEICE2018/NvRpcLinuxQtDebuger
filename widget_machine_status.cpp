@@ -21,11 +21,29 @@ bool widget_machine_status::eventFilter(QObject *target, QEvent *event)
         refrash_ui();
     }
 }
+QString getIR_msg(uint8_t irbits){
+  QString irmsg="";
+    if((irbits>>0)&0x01)
+  {
+        irmsg.append("CL");
+  }
+    if((irbits>>1)&0x01)
+  {
+        irmsg.append("CR");
+  }
+    if((irbits)>>2&0x01)
+  {
+        irmsg.append("WL");
+  }
+    if((irbits)>>3&0x01)
+  {
+        irmsg.append("WR");
+  }
+   return irmsg;
 
+}
 void widget_machine_status::refrash_ui()
 {
-
-
      ui->sensor_lWheelCnt->setText(QString("左轮码盘值:%1").arg(MainWindow::MW->getMy_paneldata().lWheelCnt));
      ui->sensor_rWheelCnt->setText(QString("右轮码盘值:%1").arg(MainWindow::MW->getMy_paneldata().rWheelCnt));
      ui->sensor_s_pitch->setText(QString("x_gyro:%1").arg(MainWindow::MW->getMy_paneldata().x_gyro));
@@ -61,9 +79,23 @@ void widget_machine_status::refrash_ui()
      ui->text_exestatu_midle_brush->setText(QString("中扫开启:%1").arg(MainWindow::MW->getMy_panel_data_part2().executor_state>>2&0x01));
      ui->text_exestatu_side_brush->setText(QString("边扫开启:%1").arg(MainWindow::MW->getMy_panel_data_part2().executor_state>>3&0x01));
      ui->text_exestatu_fan->setText(QString("风机开启:%1").arg(MainWindow::MW->getMy_panel_data_part2().executor_state>>4&0x01));
-     ui->text_land_left_value->setText(QString("左地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().left_land));
-     ui->text_land_right_value->setText(QString("右地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().right_land));
-     ui->text_land_front_value->setText(QString("前地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().front_land));
+    if(MainWindow::MW->DEVICE_VERSION==DEVICE_T10)
+    {
+     ui->text_land_left_value->setText(QString("左地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().left_land_D10_LF));
+     ui->text_land_right_value->setText(QString("右地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().right_land_D10_RF));
+     ui->text_land_front_value->setText(QString("前地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().front_land_D10_LM));
+    }else if(MainWindow::MW->DEVICE_VERSION==DEVICE_D10){
+     ui->text_land_left_value->setText(QString("左前地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().left_land_D10_LF));
+     ui->text_land_right_value->setText(QString("右前地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().right_land_D10_RF));
+     ui->text_land_front_value->setText(QString("左中地检值:%1").arg(MainWindow::MW->getMy_panel_data_part2().front_land_D10_LM));
+     ui->text_left_wheel_setvalue->setText(QString("左码盘设定值:%1").arg((int16_t)MainWindow::MW->getMy_panel_data_part2().left_wheel_setSpeed));
+     ui->text_right_wheel_setvalue->setText(QString("右码盘设定值:%1").arg((int16_t)MainWindow::MW->getMy_panel_data_part2().right_wheel_setSpeed));
+
+
+     //     uint16_t  midle_land_D10_RM; // D10右中地检
+//     uint16_t  right_land_D10_LB; //D10左后地检
+//     uint16_t  front_land_D10_RB; //D10右后地检
+    }
 
 
      QStringList alarm_string;
@@ -99,9 +131,13 @@ void widget_machine_status::refrash_ui()
     alarm_string.append("伸缩延伸报错(T10无)");       //    27
     alarm_string.append("上基座失败");      //    28
     alarm_string.append("红外丢失");     //29
-    alarm_string.append("清水箱错误");     //30
-    alarm_string.append("污水箱错误");     //31
-
+    if(MainWindow::MW->DEVICE_VERSION==DEVICE_D10){
+    alarm_string.append("Zigbee在网L");     //30
+    alarm_string.append("Zigbee在网H");     //31
+    }else{
+        alarm_string.append("清水箱错误");     //30
+        alarm_string.append("污水箱错误");     //31
+    }
      QString alarm_msg;
      for(int i=0;i<alarm_string.size();i++)
      {
@@ -110,12 +146,12 @@ void widget_machine_status::refrash_ui()
          {
             alarm_msg.append(" 1\n");
          }else{
-           alarm_msg.append(" 0\n");
+            alarm_msg.append(" 0\n");
         }
      }
      ui->text_alarm_msgs->setText(alarm_msg);
      //show_msgs(alarm_msg);
-    if(MainWindow::MW->getDEVICE_VERSION()==DEVICE_D10)
+    if(MainWindow::MW->getDEVICE_VERSION()==DEVICE_T10)
     {
         ui->sensor_eCInfrInt_0->setText(QString("右地检 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>0 &0x01 ));
         ui->sensor_eCInfrInt_1->setText(QString("左地检 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>1 &0x01 ));
@@ -127,25 +163,75 @@ void widget_machine_status::refrash_ui()
         ui->sensor_eCInfrInt_13->setText(QString("左后红外 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>13 &0x01 ));
         ui->sensor_eCInfrInt_14->setText(QString("右前红外 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>14 &0x01 ));
     }else
-    if(MainWindow::MW->getDEVICE_VERSION()==DEVICE_T10)
+    if(MainWindow::MW->getDEVICE_VERSION()==DEVICE_D10)
     {
-        ui->sensor_eCInfrInt_0->setText(QString("右地检 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>0 &0x01 ));
-        ui->sensor_eCInfrInt_1->setText(QString("左地检 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>1 &0x01 ));
-        ui->sensor_eCInfrInt_2->setText(QString("前中地检 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>2 &0x01 ));
-        ui->sensor_eCInfrInt_3->setText(QString("右撞板 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>3 &0x01 ));
-        ui->sensor_eCInfrInt_4->setText(QString("左撞板 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>4 &0x01 ));
-        ui->sensor_eCInfrInt_5->setText(QString("机器状态 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>5 &0x0F ));
-        ui->sensor_eCInfrInt_9->setText(QString("右后红外 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>9 &0x01 ));
-        ui->sensor_eCInfrInt_10->setText(QString("左后红外 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>10 &0x01 ));
-        ui->sensor_eCInfrInt_11->setText(QString("右红外 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>11 &0x01 ));
-        ui->sensor_eCInfrInt_12->setText(QString("左红外 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>12 &0x01 ));
-        ui->sensor_eCInfrInt_13->setText(QString("前红外 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>13 &0x01 ));
-        ui->sensor_eCInfrInt_14->setText(QString("右上撞板 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>14 &0x01 ));
-        ui->sensor_eCInfrInt_15->setText(QString("左上撞板 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>15 &0x01 ));
+        ui->sensor_eCInfrInt_0->setText(QString("机器状态 %1").arg(MainWindow::MW->getMy_paneldata().eCInfrInt>>28 &0x0F ));
+
+        ui->sensor_eCInfrInt_1->setText(QString("左撞板 %1").arg(MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>6 &0x01 ));
+        ui->sensor_eCInfrInt_2->setText(QString("中撞板 %1").arg(MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>7 &0x01 ));
+        ui->sensor_eCInfrInt_3->setText(QString("右撞板 %1").arg(MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>8 &0x01 ));
+
+        //LZ 0 LY 5 QZ 10 QY 15
+        QString IR_state="";
+        uint8_t irbits=0;
+        IR_state.append("前红外:");
+        irbits= ((MainWindow::MW->getMy_paneldata().eCInfrInt>>0 &0x01) <<0)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>5 &0x01) <<1)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>10 &0x01)<<2)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>15 &0x01)<<3);
+        IR_state.append( getIR_msg(irbits));
+        ui->sensor_eCInfrInt_4->setText(IR_state);
+        IR_state.clear();
+        IR_state.append("左红外:");
+        irbits= ((MainWindow::MW->getMy_paneldata().eCInfrInt>>1 &0x01) <<0)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>6 &0x01) <<1)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>11 &0x01)<<2)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>16 &0x01)<<3);
+        IR_state.append( getIR_msg(irbits));
+        ui->sensor_eCInfrInt_5->setText(IR_state);
+        IR_state.clear();
+        IR_state.append("右红外:");
+        irbits= ((MainWindow::MW->getMy_paneldata().eCInfrInt>>2 &0x01) <<0)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>7 &0x01) <<1)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>12 &0x01)<<2)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>17 &0x01)<<3);
+        IR_state.append( getIR_msg(irbits));
+        ui->sensor_eCInfrInt_6->setText(IR_state);
+        IR_state.clear();
+        IR_state.append("左后红外:");
+        irbits= ((MainWindow::MW->getMy_paneldata().eCInfrInt>>3 &0x01) <<0)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>8 &0x01) <<1)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>13 &0x01)<<2)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>18 &0x01)<<3);
+        IR_state.append( getIR_msg(irbits));
+        ui->sensor_eCInfrInt_7->setText(IR_state);
+        IR_state.clear();
+        IR_state.append("右后红外:");
+        irbits= ((MainWindow::MW->getMy_paneldata().eCInfrInt>>4 &0x01) <<0)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>9 &0x01) <<1)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>14 &0x01)<<2)|
+                ((MainWindow::MW->getMy_paneldata().eCInfrInt>>19 &0x01)<<3);
+        IR_state.append( getIR_msg(irbits));
+        ui->sensor_eCInfrInt_8->setText(IR_state);
+
+        ui->sensor_eCInfrInt_9 ->setText(QString("左前地检 %1").arg((MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>0 &0x01) ));
+        ui->sensor_eCInfrInt_10->setText(QString("右前地检 %1").arg((MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>1 &0x01) ));
+        ui->sensor_eCInfrInt_11->setText(QString("左中地检 %1").arg((MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>2 &0x01) ));
+        ui->sensor_eCInfrInt_12->setText(QString("右中地检 %1").arg((MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>3 &0x01) ));
+        ui->sensor_eCInfrInt_13->setText(QString("左后地检 %1").arg((MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>4 &0x01) ));
+        ui->sensor_eCInfrInt_14->setText(QString("右后地检 %1").arg((MainWindow::MW->getMy_panel_data_part2().d10_bump_bits>>5 &0x01) ));
+
     }
 
      QString statu="机器状态:";
-     switch(MainWindow::MW->getMy_paneldata().eCInfrInt>>5 &0x0F)
+     uint8_t mstate=0;
+      if(MainWindow::MW->getDEVICE_VERSION()==DEVICE_D10){
+          mstate=MainWindow::MW->getMy_paneldata().eCInfrInt>>28;
+
+      }else{
+         mstate=MainWindow::MW->getMy_paneldata().eCInfrInt>>5 &0x0F;
+      }
+     switch(mstate)
      {
          case 0:statu.append("待机中");break;
          case 1:statu.append("休眠");break;
@@ -164,6 +250,7 @@ void widget_machine_status::refrash_ui()
          case 14:statu.append("遥控");break;
          case 15:statu.append("关机");break;
          case 16:statu.append("跑机模式");break;
+
      }
      ui->sensor_machine_now_statu->setText(statu);
      ui->sensor_system_time->setText(QString("机器运行时间:%1").arg(QString::fromStdString(MainWindow::MW->getMy_paneldata().now_system_time)));

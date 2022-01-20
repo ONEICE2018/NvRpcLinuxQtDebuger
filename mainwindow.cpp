@@ -78,17 +78,21 @@ void MainWindow::init()
     set_string_cmds->insert("清扫",E_WORK_MOLD_CLEAN            );// ,//清扫 2
     set_string_cmds->insert("暂停",E_WORK_MOLD_PAUSE            );// ,// 暂停 3
     set_string_cmds->insert("异常",E_WORK_MOLD_ABNORMAL         );// ,//异常 6
-    set_string_cmds->insert("遥控",E_WORK_MOLD_REMOTE_CONTROL   );// ,//遥控 7
+    //set_string_cmds->insert("遥控",E_WORK_MOLD_REMOTE_CONTROL   );// ,//遥控 7
     set_string_cmds->insert("回基座失败",E_WORK_MOLD_RECHARGE_FAULT   );// , //回基座失败 8
     set_string_cmds->insert("跑机模式",E_WORK_MOLD_RUNING_MACHINE   );// , //跑机模式 9
     set_string_cmds->insert("配网成功",E_WIFI_CONFIG_S       );// ,     //配网成功 10
     set_string_cmds->insert("配网失败",E_WIFI_CONFIG_F    );//  //配网失败 11
+    set_string_cmds->insert("回倒",E_PERMISSION_BACKDUMP    );
 
 
     set_string_cmds->insert("网络异常",E_WIFI_ERR);       //网络异常
-    set_string_cmds->insert("地检保护使能",E_MODULE_LAND_PROTECT_ENABLE);
-    set_string_cmds->insert("地检保护禁止",E_MODULE_LAND_PROTECT_DISABLE);
+    //set_string_cmds->insert("地检保护使能",E_MODULE_LAND_PROTECT_ENABLE);
+    //set_string_cmds->insert("地检保护禁止",E_MODULE_LAND_PROTECT_DISABLE);
     set_string_cmds->insert("读取时间",E_REQU_TIME);
+
+    set_string_cmds->insert("拖布抓取",E_MOP_GET);
+    set_string_cmds->insert("拖布释放",E_MOP_PUT);
 
     machine_main_status.insert( ESTATE_INIT,                               "ESTATE_INIT");
     machine_main_status.insert( ESTATE_IDLE,			                     "空闲");
@@ -215,7 +219,13 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 
 MainWindow::~MainWindow()
 {
+
+    if(my_widget_pid_curve!=nullptr) {
+         my_widget_pid_curve->close();
+     }
+
     delete ui;
+
 }
 
 
@@ -1082,12 +1092,12 @@ void MainWindow::on_set_V_returnPressed()
     if(ui->set_V->text()!="")
     {
         my_vw.v = ui->set_V->text().toInt();
-        if(my_vw.v>300){
-            my_vw.v=300;
+        if(my_vw.v>500){
+            my_vw.v=500;
         }
-        if( my_vw.v<-300){
+        if( my_vw.v<-500){
 
-            my_vw.v=-300;
+            my_vw.v=-500;
         }
 
         ui->text_set_V->setText(QString("set_V:%1").arg(my_vw.v));
@@ -1493,4 +1503,16 @@ void MainWindow::on_goto_realtime_widget_clicked()
 
        my_widget_pid_curve->show();
        my_widget_pid_curve->activateWindow();
+}
+
+void MainWindow::on_comboBox_botversion_currentTextChanged(const QString &arg1)
+{
+    if(arg1=="DEVICE_T10"){
+        DEVICE_VERSION=DEVICE_T10;
+    }else
+    if(arg1=="DEVICE_D10"){
+        DEVICE_VERSION=DEVICE_D10;
+    }
+    ui->widget_map->update();
+    ui->widget_machine_statu->update();
 }

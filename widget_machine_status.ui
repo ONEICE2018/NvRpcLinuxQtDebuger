@@ -482,6 +482,20 @@ color: rgb(92, 35, 35);</string>
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QLabel" name="text_left_wheel_setvalue">
+        <property name="text">
+         <string>左码盘设定值</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="text_right_wheel_setvalue">
+        <property name="text">
+         <string>右码盘设定值</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

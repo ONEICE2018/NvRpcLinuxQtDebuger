@@ -168,6 +168,11 @@
     </item>
     <item>
      <property name="text">
+      <string>回倒</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
       <string>回洗</string>
      </property>
     </item>
@@ -226,6 +231,16 @@
       <string>读取时间</string>
      </property>
     </item>
+    <item>
+     <property name="text">
+      <string>拖布抓取</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>拖布释放</string>
+     </property>
+    </item>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
@@ -244,12 +259,12 @@
       <widget class="QComboBox" name="comboBox_botversion">
        <item>
         <property name="text">
-         <string>DEVICE_T10</string>
+         <string>DEVICE_D10</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>DEVICE_D10</string>
+         <string>DEVICE_T10</string>
         </property>
        </item>
       </widget>
@@ -271,7 +286,7 @@
          <item>
           <widget class="QLineEdit" name="set_rpc_IP">
            <property name="text">
-            <string>192.168.0.102</string>
+            <string>192.168.0.151</string>
            </property>
           </widget>
          </item>

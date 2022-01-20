@@ -57,13 +57,13 @@ struct rpc_panel_data
     //>>>
     int16_t lWheelCnt;
     int16_t rWheelCnt;
-    int16_t x_gyro;
-    int16_t y_gyro;
-    int16_t z_gyro;
-    int16_t xacc;
-    int16_t yacc;
-    int16_t zacc;
-    int16_t eCInfrInt;
+    float x_gyro;
+    float y_gyro;
+    float z_gyro;
+    float xacc;
+    float yacc;
+    float zacc;
+    uint32_t eCInfrInt;
     uint32_t alarmInt ;
     uint8_t borderDist;
     uint8_t battInt ;
@@ -115,22 +115,66 @@ struct rpc_panel_data_part2{
         uint8_t   curr_fan;
         uint8_t   protect_land_enable;
         uint8_t  executor_state;
-        uint16_t  left_land;
-        uint16_t  right_land;
-        uint16_t  front_land;
+        uint16_t  left_land_D10_LF;
+        uint16_t  right_land_D10_RF;
+        uint16_t  front_land_D10_LM;
+        uint16_t  left_wheel_setSpeed  ;
+        uint16_t  right_wheel_setSpeed ;
+        uint16_t  midle_land_D10_RM;   // D10右中地检
+        uint16_t  right_land_D10_LB; //D10左后地检
+        uint16_t  front_land_D10_RB; //D10右后地检
+        uint16_t d10_bump_bits;
+
         //<<<<<<<<<<<<<<<
         MSGPACK_DEFINE_MAP(along_angle_kpid,along_dis_kpid,along_refrence_dis,along_allow_errodis,along_pidtester_enable
                            ,along_pidtester_enable,mainStat,cleanStat
                            ,curr_left_edge_brush,curr_right_edge_brush,curr_left_wheel,curr_right_wheel
-                           ,curr_midle_brush,curr_mop,curr_fan,protect_land_enable,executor_state,left_land,right_land
-                           ,front_land
-                          );
+                           ,curr_midle_brush,curr_mop,curr_fan,protect_land_enable,executor_state,left_land_D10_LF,right_land_D10_RF
+                           ,front_land_D10_LM,left_wheel_setSpeed,right_wheel_setSpeed,midle_land_D10_RM,right_land_D10_LB,front_land_D10_RB
+                          ,d10_bump_bits);
 
 };
 
 //master to slave
 enum CMToSCMD //master to slave command
 {
+//    E_MOVE = 1,//下发 V W，移动速度
+//    E_MOPDOWN,		//放下拖布
+//    E_MOPUP,        //抬起拖布
+//    E_EDGE_SWEEP_LOW,//边扫开
+//    E_EDGE_SWEEP_MIDDLE, //T10
+//    E_EDGE_SWEEP_HIGHT,  //T10
+//    E_EDGE_SWEEP_CLOSE,//边扫关
+//    E_FAN_OPEN_LOW = 8,   //风机 低
+//    E_FAN_OPEN_MIDDLE, //风机中
+//    E_FAN_OPEN_HIGHT, //风机 高
+//    E_FAN_OPEN_STRONGLY, //风机 强劲
+//    E_FAN_CLOSE,		//风机 关
+//    E_MIDDLE_SWEEP_LOW, //中扫 开
+//    E_MIDDLE_SWEEP_MIDDLE, //T10
+//    E_MIDDLE_SWEEP_HIGHT,  //T10
+//    E_MIDDLE_SWEEP_CLOSE,//中扫 关
+//    E_APP_START_CLEAN_MOP=17, //APP控制洗拖布
+//    E_REQUEST_VERSION, //请求下位机版本号
+//    E_REQU_TIME, //请求下位机的时间
+//    E_SYNC_TIME, //将最新时间同步给下位机
+//    E_WORK_MOLD_STANBY=21,//待机 0
+//    E_WORK_MOLD_SLEEP,//休眠 1
+//    E_WORK_MOLD_CLEAN,//清扫 2
+//    E_WORK_MOLD_PAUSE ,// 暂停 3
+//    E_PERMISSION_RECHARGE,//回充下发控制权 4
+//    E_PERMISSION_BACKWASH,//回洗下发控制权 5
+//    E_WORK_MOLD_ABNORMAL ,//异常 6
+//    E_WORK_MOLD_REMOTE_CONTROL,//遥控 7
+//    E_WORK_MOLD_RECHARGE_FAULT, //回基座失败 8
+//    E_PERMISSION_SHUTDOWN,//关机 9
+//    E_WORK_MOLD_RUNING_MACHINE, //跑机模式 10
+//    E_WIFI_CONFIG_S, //配望成功 11
+//    E_WIFI_CONFIG_F, //配望失败 12
+//    E_WIFI_ERR,       //网络异常13
+//    E_MODULE_LAND_PROTECT_ENABLE,
+//    E_MODULE_LAND_PROTECT_DISABLE,
+//    E_ACK_EXECUTOR_STATUS
     E_MOVE = 1,//下发 V W，移动速度
     E_MOPDOWN,		//放下拖布
     E_MOPUP,        //抬起拖布
@@ -157,20 +201,14 @@ enum CMToSCMD //master to slave command
     E_REQU_TIME, //请求下位机的时间
     E_SYNC_TIME, //将最新时间同步给下位机
 
-//    E_PERMISSION_NULL,    //上位机收回控制权
-//	E_PERMISSION_RECHARGE,//回充下发控制权
-//    E_PERMISSION_BACKWASH,//回洗下发控制权
-
     E_WORK_MOLD_STANBY=21,//待机 0
     E_WORK_MOLD_SLEEP,//休眠 1
     E_WORK_MOLD_CLEAN,//清扫 2
     E_WORK_MOLD_PAUSE ,// 暂停 3
-//	E_WORK_MOLD_RECHARGE,//回充 4
-//	E_WORK_MOLD_BACKWASH ,//回洗 5
     E_PERMISSION_RECHARGE,//回充下发控制权 4
     E_PERMISSION_BACKWASH,//回洗下发控制权 5
     E_WORK_MOLD_ABNORMAL ,//异常 6
-    E_WORK_MOLD_REMOTE_CONTROL,//遥控 7
+    E_PERMISSION_BACKDUMP,     //回倒下发控制权7
     E_WORK_MOLD_RECHARGE_FAULT, //回基座失败 8
     E_PERMISSION_SHUTDOWN,//关机 9
     E_WORK_MOLD_RUNING_MACHINE, //跑机模式 10
@@ -178,13 +216,73 @@ enum CMToSCMD //master to slave command
 
     E_WIFI_CONFIG_S, //配望成功 11
     E_WIFI_CONFIG_F, //配望失败 12
-    E_WIFI_ERR,       //网络异常13
+    E_WIFI_ERR,       //网络异常
+    E_ACK_EXECUTOR_STATUS,
+    E_SET_OFFSET_SETTING,//产检校准传参
+    E_SET_ODOMETRY,      //里程校准
 
-    E_MODULE_LAND_PROTECT_ENABLE,
-    E_MODULE_LAND_PROTECT_DISABLE,
-    E_ACK_EXECUTOR_STATUS
+    E_TELL_IS_SLIPING, //告诉下位机打滑了
 
+    E_PERMISSION_GRAB_DUSTBOX, //取尘盒下发控制权
+    E_PERMISSION_PUT_DOWN_MOP, //放下拖布下发控制权
+    E_PERMISSION_GRAB_MOP,     //取拖布下发控制权
+    E_PERMISSION_UPWARD,       //上基座下发控制权
+
+    E_ZIGBEE_CONFIG,       //
+    E_MOP_PUT,
+    E_MOP_GET
 };
+
+//master to slave
+enum CMToSCMD_D10 //master to slave command
+{
+    E_D10_MOVE = 1,//下发 V W，移动速度
+    E_D10_MOPDOWN,		//放下拖布
+    E_D10_MOPUP,        //抬起拖布
+    E_D10_EDGE_SWEEP_LOW,//边扫开
+    E_D10_EDGE_SWEEP_MIDDLE,
+    E_D10_EDGE_SWEEP_HIGHT,
+    E_D10_EDGE_SWEEP_CLOSE,//边扫关
+    E_D10_FAN_OPEN_LOW = 8,   //风机 低
+    E_D10_FAN_OPEN_MIDDLE, //风机中
+    E_D10_FAN_OPEN_HIGHT, //风机 高
+    E_D10_FAN_OPEN_STRONGLY, //风机 强劲
+    E_D10_FAN_CLOSE,		//风机 关
+    E_D10_MIDDLE_SWEEP_LOW, //中扫 开
+    E_D10_MIDDLE_SWEEP_MIDDLE, //T10
+    E_D10_MIDDLE_SWEEP_HIGHT,  //T10
+    E_D10_MIDDLE_SWEEP_CLOSE,//中扫 关
+    E_D10_APP_START_CLEAN_MOP=17, //APP控制洗拖布
+    E_D10_REQUEST_VERSION, //请求下位机版本号
+    E_D10_REQU_TIME, //请求下位机的时间
+    E_D10_SYNC_TIME, //将最新时间同步给下位机
+    E_D10_WORK_MOLD_STANBY=21,//待机 0
+    E_D10_WORK_MOLD_SLEEP,//休眠 1
+    E_D10_WORK_MOLD_CLEAN,//清扫 2
+    E_D10_WORK_MOLD_PAUSE ,// 暂停 3
+    E_D10_PERMISSION_RECHARGE,//回充下发控制权 4
+    E_D10_PERMISSION_BACKWASH,//回洗下发控制权 5
+    E_D10_WORK_MOLD_ABNORMAL ,//异常 6
+    E_D10_WORK_MOLD_REMOTE_CONTROL,//遥控 7
+    E_D10_WORK_MOLD_RECHARGE_FAULT, //回基座失败 8
+    E_D10_PERMISSION_SHUTDOWN,//关机 9
+    E_D10_WORK_MOLD_RUNING_MACHINE, //跑机模式 10
+    E_D10_WIFI_CONFIG_S, //配望成功 11
+    E_D10_WIFI_CONFIG_F, //配望失败 12
+    E_D10_WIFI_ERR,       //网络异常
+    E_D10_ACK_EXECUTOR_STATUS,
+    E_D10_SET_OFFSET_SETTING,//产检校准传参
+    E_D10_SET_ODOMETRY,      //里程校准
+    E_D10_TELL_IS_SLIPING, //告诉下位机打滑了
+    E_D10_PERMISSION_BACKDUMP,     //回倒下发控制权
+    E_D10_PERMISSION_GRAB_DUSTBOX, //取尘盒下发控制权
+    E_D10_PERMISSION_PUT_DOWN_MOP, //放下拖布下发控制权
+    E_D10_PERMISSION_GRAB_MOP,     //取拖布下发控制权
+    E_D10_PERMISSION_UPWARD,       //上基座下发控制权
+    E_D10_ZIGBEE_CONFIG       //
+
+
+};//下发到下位机的控制指令和状态列表
 
 
 enum EMainState
@@ -280,7 +378,7 @@ public:
     BOTVERSION getDEVICE_VERSION() const;
 
     rpc_panel_data_part2 getMy_panel_data_part2() const;
-
+    BOTVERSION DEVICE_VERSION{DEVICE_D10};
 protected:
     virtual  void keyPressEvent(QKeyEvent *event);
    virtual void keyReleaseEvent(QKeyEvent *event);
@@ -414,6 +512,8 @@ private slots:
 
     void on_goto_realtime_widget_clicked();
 
+    void on_comboBox_botversion_currentTextChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     rpc::client* c_reply = nullptr;
@@ -444,6 +544,7 @@ private:
     rpc_panel_data my_paneldata;
     rpc_panel_data_part2 my_panel_data_part2;
     void init();
+    void version_init(void);
     void ref_ui_main();
 
     void play_hisbot();
@@ -457,7 +558,7 @@ private:
     void get_syc_time(time_struct syc);
     QMap<int,QString> machine_main_status;
     QMap<int,QString> machine_clean_status;
-    BOTVERSION DEVICE_VERSION{DEVICE_T10};
+
 
     widget_pid_curve *my_widget_pid_curve=nullptr;
 
