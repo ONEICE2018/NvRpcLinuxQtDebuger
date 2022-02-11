@@ -180,6 +180,34 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         case Qt::Key_D:
             on_remote_cotrol_right_pressed();
         break;
+    case Qt::Key_J:
+        if(c_reply!=nullptr)
+        {
+           if(!set_string_cmds->contains("放下拖布"))
+           {
+               return;
+           }
+           int cmd = set_string_cmds->value("放下拖布");
+           QString set_cmdis=QString("cmd set is %1 ").arg(cmd);
+           int getcmd=c_reply->call("set_slave_cmd",cmd).as<int>();
+           set_cmdis.append(QString("     get cmd is %1").arg(getcmd));
+           showMsgs(set_cmdis);
+        }
+        break;
+    case Qt::Key_K:
+        if(c_reply!=nullptr)
+        {
+           if(!set_string_cmds->contains("抬起拖布"))
+           {
+               return;
+           }
+           int cmd = set_string_cmds->value("抬起拖布");
+           QString set_cmdis=QString("cmd set is %1 ").arg(cmd);
+           int getcmd=c_reply->call("set_slave_cmd",cmd).as<int>();
+           set_cmdis.append(QString("     get cmd is %1").arg(getcmd));
+           showMsgs(set_cmdis);
+        }
+        break;
 
    }
     }
